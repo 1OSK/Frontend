@@ -1,0 +1,488 @@
+/* Общие стили */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+* {
+    font-family: "Roboto", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    color: #000000;
+    box-sizing: border-box;
+}
+
+body {
+    background: #ffffff;
+}
+
+/* Основные стили */
+.space {
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* Контейнеры */
+.container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px; /* Расстояние между карточками */
+    padding: 30px; /* Отступ вокруг контейнера */
+    max-width: 1300px; /* Максимальная ширина контейнера */
+    margin: 0 auto; /* Центровка контейнера */
+    width: 100%;
+}
+
+.card {
+    display: flex; /* Убедитесь, что карточка использует Flexbox */
+    flex-direction: column; /* Вертикальное расположение элементов */
+    justify-content: space-between; /* Элементы растягиваются по высоте */
+    height: 100%; /* Заполнение доступного пространства */
+    border-radius: 10px;
+    background-color: #ffffff;
+    padding: 20px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.row {
+    display: flex; /* Убедитесь, что у вас используется Flexbox */
+    flex-wrap: wrap; /* Позволяет элементам переноситься при нехватке места */
+}
+
+.col {
+    display: flex; /* Обеспечивает, что колонка также использует Flexbox */
+    flex-direction: column; /* Вертикальное расположение элементов в колонке */
+    height: 100%; /* Убедитесь, что высота колонки равна 100% */
+}
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+.card-price-button-container {
+    display: flex;
+    justify-content: space-start;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 20px;
+    gap: 10px; 
+}
+
+
+.price {
+    font-size: 18px;
+    font-weight: 500;
+    color: #333;
+    margin: 0;
+    white-space: nowrap; /* Предотвращает перенос текста */
+    align-self: flex-end;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: column; /* Размещает кнопки друг под другом */
+    align-items: flex-start; /* Выравнивает кнопки по левому краю */
+    gap: 10px;
+}
+
+
+.card-button {
+    padding: 10px 15px; 
+    border-radius: 3px;
+    border: 1px solid #3faf4a; 
+    text-decoration: none;
+    font-size: 14px; 
+    font-weight: 500; 
+    color: #3faf4a; 
+    background-color: #fff; 
+    transition: background-color 0.3s ease, color 0.3s ease;
+    text-align: center; 
+    display: inline-block; 
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    max-width: 100%; 
+}
+.card-button.disabled {
+    background-color: #f0f0f0; /* Цвет фона для неактивной кнопки */
+    color: #999; /* Цвет текста для неактивной кнопки */
+    cursor: not-allowed; /* Курсор указывает, что кнопка неактивна */
+}
+.card-title {
+    white-space: nowrap; /* Предотвращает перенос текста */
+    overflow: hidden;    /* Скрывает избыточный контент */
+    text-overflow: ellipsis; /* Добавляет многоточие для длинного текста */
+    font-size: 20px; /* Примерный размер шрифта, настройте по вашему усмотрению */
+    font-weight: 500; /* Настройка веса шрифта */
+    margin: 0; /* Убирает отступы */
+}
+.card-button.disabled:hover {
+    background-color: #f0f0f0; /* Убедитесь, что фон не меняется при наведении */
+    color: #999; /* Убедитесь, что цвет текста не меняется при наведении */
+}
+.current-order-button.disabled {
+    background-color: #f0f0f0; /* Цвет фона для неактивной кнопки */
+    color: #999; /* Цвет текста для неактивной кнопки */
+    cursor: not-allowed; /* Курсор указывает, что кнопка неактивна */
+    pointer-events: none; /* Отключает все события наведения и клика */
+}
+
+.current-order-button.disabled:hover {
+    background-color: #f0f0f0; /* Убедитесь, что фон не меняется при наведении */
+    color: #999; /* Убедитесь, что цвет текста не меняется при наведении */
+}
+.card-button:hover {
+    background-color: #3faf4a;
+    color: #fff;
+}
+.add-button-container {
+    margin-left: auto; /* Отодвигает контейнер кнопки вправо */
+}
+/* Контейнеры */
+.background-block {
+    background-color: #ffffff;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+    position: relative;
+    overflow: hidden;
+}
+
+.service-detail-container {
+    display: flex;
+    align-items: stretch;
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.service-text {
+    flex: 1;
+    max-width: 50%;
+    color: #000000;
+}
+
+.service-text h1 {
+    color: #000000;
+}
+
+.image-container {
+    flex-grow: 1; /* Позволяет изображению занимать оставшееся пространство */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Скрыть переполненное содержимое, если необходимо */
+}
+
+.service-image {
+    max-width: 100%; /* Ограничение ширины изображения */
+    height: auto; /* Автоматическая высота для сохранения пропорций */
+}
+
+/* Изображение внутри контейнера */
+.service-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Изображение сохраняет соотношение сторон и заполняет контейнер */
+    border-radius: 10px;
+    display: block;
+}
+/* Стили для изображения на странице детали услуги */
+.service-detail-image {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    border-radius: 10px;
+    display: block;
+    margin: 0 auto;
+}
+
+.service-details {
+    list-style-type: none;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.service-details li {
+    margin-bottom: 10px;
+    position: relative;
+    padding-left: 20px;
+    color: #000000;
+}
+
+.service-details li::before {
+    content: '> ';
+    position: absolute;
+    left: 0;
+    color: #000000;
+}
+
+/* Заголовки */
+.title, .page-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 16px;
+    color: #333;
+}
+
+.page-title {
+    font-size: 24px;
+    text-align: center;
+}
+
+.search-form-container {
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px;
+}
+
+.search-form-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 800px;
+}
+
+.search-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.search-input {
+    padding: 10px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    font-size: 16px;
+    max-width: 200px;
+}
+
+.search-button {
+    padding: 10px 15px;
+    border-radius: 4px;
+    border: 1px solid #ffffff;
+    background-color: #000000;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.search-button:hover {
+    background-color: #85888c;
+    color: #000000;
+}
+
+.navigation-bar {
+    width: 100%;
+    background-color: #000000;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Равномерное распределение элементов */
+    position: fixed; /* Фиксирует панель сверху */
+    top: 0; /* Прикрепляет к верхней части страницы */
+    left: 0;
+    z-index: 1000; /* Размещает навигацию выше других элементов */
+}
+
+.navigation-bar .search-form {
+    margin-left: auto;
+}
+.header-title {
+    color: #000000;
+    text-decoration: none;
+    font-size: 50px;
+    font-weight: 600;
+    margin-right: 15px;
+    transition: color 0.3s ease;
+}
+
+.header-title {
+    color: #ffffff; /* Белый цвет текста */
+    text-decoration: none;
+    font-size: 50px;
+    font-weight: 600;
+    margin-right: 15px;
+    transition: color 0.3s ease;
+}
+
+.header-title:hover {
+    color: #85888c; /* Серый цвет при наведении */
+}
+
+header nav a {
+    color: #000000;
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 50px;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+header nav a:hover {
+    color: #85888c;
+}
+
+/* Контактная информация */
+.contact-info {
+    text-align: right;
+}
+
+.city {
+    font-size: 14px;
+    margin: 0;
+    text-transform: lowercase;
+}
+
+
+/* Кнопка текущего запроса */
+.current-order-button {
+    padding: 5px 8px;
+    border-radius: 5px;
+    border: 1px solid #000000;
+    background-color: #fff;
+    color: #000;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    margin-left: 20px;
+}
+
+.current-order-button:hover {
+    background-color: #85888c;
+    color: #fff;
+}
+
+/* Request Card */
+.order-card {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.order-title {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.order-count {
+    font-size: 16px;
+    color: #666;
+}
+
+.order-button {
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px solid #000000;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.order-button:hover {
+    background-color: #85888c;
+}
+
+/* Контейнер для деталей заявки и списка услуг */
+.order-details-container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    
+}
+
+/* Детали заявки */
+.order-summary {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.order-title, .order-count {
+    margin-bottom: 15px;
+}
+
+.order-title {
+    font-size: 20px;
+    color: #333;
+}
+
+.order-count {
+    font-size: 16px;
+    color: #666;
+}
+
+/* Стили для контейнера списка услуг */
+.service-list-container {
+    margin-top: 20px;
+}
+
+/* Основной контейнер для списка услуг */
+.equipment-list {
+    display: flex;
+    flex-direction: column; /* Отображение карточек в один столбец */
+    gap: 20px; /* Расстояние между карточками */
+    
+}
+
+
+
+.quantity,
+.total-price {
+    margin: 5px 0;
+    font-size: 18px;
+}
+
+.item-details strong {
+    font-weight: bold;
+}
+.equipment-item {
+    display: flex;
+    align-items: center; /* Vertically center items */
+    justify-content: space-between;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #fff;
+}
+
+.card1 {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-decoration: none;
+    color: inherit;
+    flex: 1;
+    max-width: 400px; /* Adjust as needed */
+}
+
+.equipment-image {
+    width: 500px; /* Фиксированная ширина */
+    height: 300px; /* Фиксированная высота */
+    border-radius: 10px; /* Закругленные углы */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Тень под изображением */
+    margin: 20px auto; /* Центровка изображения и отступы */
+    display: block; /* Делаем изображение блочным элементом */
+    object-fit: cover; /* Обрезает изображение, чтобы оно заполнило контейнер */
+}
+.inactive {
+    opacity: 0.5; /* Делаем карточку менее заметной */
+    pointer-events: none; /* Отключаем взаимодействие с элементами */
+}

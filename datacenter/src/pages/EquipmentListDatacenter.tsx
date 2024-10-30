@@ -45,9 +45,7 @@ const EquipmentListDatacenter: React.FC<{ isAuthenticated: boolean; currentOrder
     };
 
     return (
-        <Container className="space">
-            <h1 className="page-title">Список услуг датацентра</h1>
-
+        <>
             <nav className="navigation-bar">
                 <a href="{% url 'service_list_datacenter' %}" className="header-title">Data Center</a>
                 <Form className="search-form" onSubmit={(e) => { e.preventDefault(); fetchServices(); }}>
@@ -63,7 +61,7 @@ const EquipmentListDatacenter: React.FC<{ isAuthenticated: boolean; currentOrder
                         <Button variant="primary" type="submit" className="search-button">Поиск</Button>
                     </Form.Group>
                 </Form>
-
+        
                 <div className={`order-info ${!isAuthenticated ? 'inactive' : ''}`}>
                     {isAuthenticated && currentOrderId ? (
                         <a href={`/order-detail/${currentOrderId}`} className="current-order-button">
@@ -74,46 +72,48 @@ const EquipmentListDatacenter: React.FC<{ isAuthenticated: boolean; currentOrder
                     )}
                 </div>
             </nav>
-
-            {loading && <Spinner animation="border" />}
-            {error && <Alert variant="danger">{error}</Alert>}
-
-            <Row>
-                {services.map(service => (
-                    <Col key={service.id} md={4} className="mb-4">
-                        <div className="card">
-                            <a href={`/service-detail/${service.id}`} className="card-title">
-                                <p className="title">{service.name}</p>
-                            </a>
-                            <div className="image-container">
-                                {service.image_url ? (
-                                    <img src={service.image_url} alt={service.name} className="service-image" />
-                                ) : (
-                                    <div className="no-image">
-                                        <span>Нет изображения</span>
-                                    </div>
-                                )}
-                            </div>
-                            <div className="card-price-button-container" style={{ marginTop: 'auto' }}>
-                                {service.price && <p className="price">{service.price} руб.</p>}
-                                <div className="button-container">
-                                    <a href={`/service-detail/${service.id}`} className="card-button">Подробнее о комплектующем</a>
-                                    <div className="add-button-container">
-                                        {isAuthenticated ? (
-                                            <Button variant="success" onClick={() => handleAddToOrder(service.id)} className="card-button">
-                                                Добавить в заказ
-                                            </Button>
-                                        ) : (
-                                            <Button variant="secondary" disabled className="card-button disabled">Добавить в заказ</Button>
-                                        )}
+        
+            <Container className="space">
+                {loading && <Spinner animation="border" />}
+                {error && <Alert variant="danger">{error}</Alert>}
+        
+                <Row>
+                    {services.map(service => (
+                        <Col key={service.id} md={4} className="mb-4">
+                            <div className="card">
+                                <a href={`/service-detail/${service.id}`} className="card-title">
+                                    <p className="title">{service.name}</p>
+                                </a>
+                                <div className="image-container">
+                                    {service.image_url ? (
+                                        <img src={service.image_url} alt={service.name} className="service-image" />
+                                    ) : (
+                                        <div className="no-image">
+                                            <span>Нет изображения</span>
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="card-price-button-container" style={{ marginTop: 'auto' }}>
+                                    {service.price && <p className="price">{service.price} руб.</p>}
+                                    <div className="button-container">
+                                        <a href={`/service-detail/${service.id}`} className="card-button">Подробнее о комплектующем</a>
+                                        <div className="add-button-container">
+                                            {isAuthenticated ? (
+                                                <Button variant="success" onClick={() => handleAddToOrder(service.id)} className="card-button">
+                                                    Добавить в заказ
+                                                </Button>
+                                            ) : (
+                                                <Button variant="secondary" disabled className="card-button disabled">Добавить в заказ</Button>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </Col>
-                ))}
-            </Row>
-        </Container>
+                        </Col>
+                    ))}
+                </Row>
+            </Container>
+        </>
     );
 };
 

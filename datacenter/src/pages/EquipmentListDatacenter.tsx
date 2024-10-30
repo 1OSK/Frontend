@@ -96,7 +96,7 @@ const EquipmentListDatacenter: React.FC<{ isAuthenticated: boolean; currentOrder
                                 <div className="card-price-button-container" style={{ marginTop: 'auto' }}>
                                     {service.price && <p className="price">{service.price} руб.</p>}
                                     <div className="button-container">
-                                        <a href={`/service-detail/${service.id}`} className="card-button">Подробнее о комплектующем</a>
+                                    <a href={`/datacenter-services/${service.id}/`} className="card-button">Подробнее о комплектующем</a>
                                         <div className="add-button-container">
                                             {isAuthenticated ? (
                                                 <Button variant="success" onClick={() => handleAddToOrder(service.id)} className="card-button">

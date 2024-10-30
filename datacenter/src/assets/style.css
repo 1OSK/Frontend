@@ -12,19 +12,20 @@
 .space {
     width: 100%;
     margin: 0 auto;
+    padding: 20px; /* Можно добавить внутренний отступ, если нужно */
+    max-width: 100%; /* Убедитесь, что ширина ограничена только 100% */
+    box-sizing: border-box; /* Включаем отступы и границы в ширину */
 }
 
-/* Навигация */
 .navigation-bar {
-    width: 100%; /* Занимает всю ширину */
-    background-color: #000000; /* Цвет фона */
-    padding: 10px 20px; /* Отступы */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Тень для визуального эффекта */
-    display: flex; /* Используем Flexbox для компоновки */
-    justify-content: space-between; /* Равномерно распределяем элементы по ширине */
-    align-items: center; /* Центрируем по вертикали */
-    position: relative; /* Для управления позиционированием элементов */
-    z-index: 1000; /* Повышаем z-index, чтобы навигация была выше других элементов */
+    width: 100%;          /* Занимает всю ширину экрана */
+    background-color: #000000; /* Фоновый цвет панели */
+    padding: 10px 20px;   /* Внутренние отступы для удобного расположения */
+    display: flex;        /* Используем flexbox для удобного размещения элементов */
+    align-items: center;  /* Выравниваем элементы по вертикали */
+    justify-content: space-between; /* Размещаем элементы по краям */
+    position: relative;   /* Если нужно добавить позиционирование */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Тень для эстетичности */
 }
 .current-order-button {
     padding: 5px 8px;
@@ -88,6 +89,7 @@
 .search-button:hover {
     background-color: #85888c;
     color: #000000;
+    border: 1px solid #000000;
 }
 
 
@@ -112,9 +114,10 @@
     padding: 30px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    margin: 10px; 
-    width: 100%; 
-    min-height: 150px; 
+    margin: 10px;
+    width: 100%;
+    min-height: 350px; /* Минимальная высота для равномерного отображения карточек */
+    height: 100%; /* Чтобы карточки выравнивались по высоте внутри контейнера */
 }
 .card-title {
     text-decoration: none; /* Убираем подчеркивание */
@@ -182,8 +185,10 @@
 .button-container {
     display: flex;
     flex-direction: column; /* Размещает кнопки друг под другом */
-    align-items: flex-start; /* Выравнивает кнопки по левому краю */
+    margin-left: auto; /* Сместить контейнер кнопок вправо */
+    padding-right: 10px; /* Добавить отступ от правого края карточки */
     gap: 10px;
+    align-items: flex-end;
 }
 
 .card-button {
@@ -203,7 +208,10 @@
     text-overflow: ellipsis; 
     max-width: 100%; 
 }
-
+.card-button:hover {
+    background-color: #3faf4a;
+    color: #fff;
+}
 .add-button-container {
     margin-left: auto; /* Отодвигает контейнер кнопки вправо */
 }

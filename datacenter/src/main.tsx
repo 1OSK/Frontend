@@ -4,11 +4,16 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import './index.css';
 import EquipmentListDatacenter from './pages/EquipmentListDatacenter';
+import EquipmentDetailDatacenter from './pages/EquipmentDetailDatacenter';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <EquipmentListDatacenter />,
+  },
+  {
+    path: '/datacenter-services/:id',  // Define dynamic route for equipment detail
+    element: <EquipmentDetailDatacenter />,
   },
 
 ]);

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Button, Form, Spinner, Alert } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../assets/style.css';
+import { Link } from 'react-router-dom';
 
 interface DatacenterService {
     id: number;
@@ -47,9 +48,17 @@ const EquipmentListDatacenter: React.FC<{ isAuthenticated: boolean; currentOrder
     return (
         <>
             <nav className="navigation-bar">
-                <a href="{% url 'service_list_datacenter' %}" className="header-title">Data Center</a>
+                <Link to="/" className="header-title">Data Center</Link>
                 <Form className="search-form" onSubmit={(e) => { e.preventDefault(); fetchServices(); }}>
                     <Form.Group className="d-flex">
+                        <Form.Control
+                            type="number"
+                            placeholder="Минимальная цена..."
+                            value={minPrice}
+                            onChange={handlePriceChange(setMinPrice)}
+                            min="0"
+                            className="search-input"
+                        />
                         <Form.Control
                             type="number"
                             placeholder="Максимальная цена..."
@@ -64,11 +73,11 @@ const EquipmentListDatacenter: React.FC<{ isAuthenticated: boolean; currentOrder
         
                 <div className={`order-info ${!isAuthenticated ? 'inactive' : ''}`}>
                     {isAuthenticated && currentOrderId ? (
-                        <a href={`/order-detail/${currentOrderId}`} className="current-order-button">
+                        <Link to={`/order-detail/${currentOrderId}`} className="current-order-button">
                             Текущий заказ (Оборудование: {/* Тут можно указать количество оборудования */} 0)
-                        </a>
+                        </Link>
                     ) : (
-                        <a href="#" className="current-order-button disabled" disabled>Текущий заказ недоступен</a>
+                        <span className="current-order-button disabled">Текущий заказ недоступен</span>
                     )}
                 </div>
             </nav>
@@ -81,9 +90,9 @@ const EquipmentListDatacenter: React.FC<{ isAuthenticated: boolean; currentOrder
                     {services.map(service => (
                         <Col key={service.id} md={4} className="mb-4">
                             <div className="card">
-                                <a href={`/service-detail/${service.id}`} className="card-title">
+                                <Link to={`/datacenter-services/${service.id}/`} className="card-title">
                                     <p className="title">{service.name}</p>
-                                </a>
+                                </Link>
                                 <div className="image-container">
                                     {service.image_url ? (
                                         <img src={service.image_url} alt={service.name} className="service-image" />
@@ -96,7 +105,7 @@ const EquipmentListDatacenter: React.FC<{ isAuthenticated: boolean; currentOrder
                                 <div className="card-price-button-container" style={{ marginTop: 'auto' }}>
                                     {service.price && <p className="price">{service.price} руб.</p>}
                                     <div className="button-container">
-                                    <a href={`/datacenter-services/${service.id}/`} className="card-button">Подробнее о комплектующем</a>
+                                        <Link to={`/datacenter-services/${service.id}/`} className="card-button">Подробнее о комплектующем</Link>
                                         <div className="add-button-container">
                                             {isAuthenticated ? (
                                                 <Button variant="success" onClick={() => handleAddToOrder(service.id)} className="card-button">

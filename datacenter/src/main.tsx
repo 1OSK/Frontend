@@ -6,18 +6,19 @@ import './index.css';
 import EquipmentListDatacenter from './pages/EquipmentListDatacenter';
 import EquipmentDetailDatacenter from './pages/EquipmentDetailDatacenter';
 
+// Создаем маршрутизатор
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <EquipmentListDatacenter />,
+    element: <EquipmentListDatacenter isAuthenticated={false} currentOrderId={null} />,
   },
   {
-    path: '/datacenter-services/:id',  // Define dynamic route for equipment detail
+    path: '/datacenter-services/:id',  // Динамический маршрут для деталей оборудования
     element: <EquipmentDetailDatacenter />,
   },
-
 ]);
 
+// Рендерим приложение
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <RouterProvider router={router} />

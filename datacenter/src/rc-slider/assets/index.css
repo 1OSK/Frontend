@@ -1,0 +1,83 @@
+/* Основной контейнер ползунка */
+.rc-slider {
+    position: relative;
+    width: 100%;
+    height: 24px;
+    padding: 5px 0;
+  }
+  
+  /* Трек */
+  .rc-slider-track {
+    position: absolute;
+    background-color: #1890ff;
+    height: 6px;
+    border-radius: 6px;
+  }
+  
+  /* Полоса ползунка */
+  .rc-slider-rail {
+    position: absolute;
+    width: 100%;
+    background-color: #e9e9e9;
+    height: 6px;
+    border-radius: 6px;
+  }
+  
+  /* Ручка (ползунок) */
+  .rc-slider-handle {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+    border-radius: 50%;
+    background-color: #fff;
+    border: 2px solid #1890ff;
+    margin-top: -4px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  
+  .rc-slider-handle:focus,
+  .rc-slider-handle:hover {
+    border-color: #40a9ff;
+    box-shadow: 0 0 5px #40a9ff;
+  }
+  
+  /* Стиль для активной части трека */
+  .rc-slider-handle-active {
+    border-color: #096dd9;
+  }
+  
+  /* Метки на треке */
+  .rc-slider-mark {
+    position: absolute;
+    font-size: 12px;
+  }
+  
+  .rc-slider-mark-text {
+    display: inline-block;
+    color: #999;
+    position: absolute;
+    white-space: nowrap;
+    text-align: center;
+    cursor: pointer;
+  }
+  
+  .rc-slider-mark-text-active {
+    color: #1890ff;
+  }
+  
+  /* Стили для диапазонного ползунка */
+  .rc-slider-dot {
+    position: absolute;
+    bottom: -2px;
+    width: 8px;
+    height: 8px;
+    border: 2px solid #e9e9e9;
+    background-color: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  
+  .rc-slider-dot-active {
+    border-color: #1890ff;
+  }

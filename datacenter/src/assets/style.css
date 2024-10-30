@@ -17,18 +17,21 @@
     box-sizing: border-box; /* Включаем отступы и границы в ширину */
 }
 
+
 .navigation-bar {
-    width: 100%;          /* Занимает всю ширину экрана */
-    background-color: #000000; /* Фоновый цвет панели */
-    padding: 10px 20px;   /* Внутренние отступы для удобного расположения */
-    display: flex;        /* Используем flexbox для удобного размещения элементов */
-    align-items: center;  /* Выравниваем элементы по вертикали */
-    justify-content: space-between; /* Размещаем элементы по краям */
-    position: relative;   /* Если нужно добавить позиционирование */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Тень для эстетичности */
+    position: fixed; /* Фиксируем навигационную панель */
+    top: 0; /* Прикрепляем к верхней части окна */
+    left: 0; /* Прикрепляем к левой части окна */
+    width: 100%; /* Ширина 100% */
+    background-color: #000000; /* Цвет фона для четкого отделения */
+    z-index: 1000; /* Устанавливаем высокий z-index, чтобы она была над другими элементами */
+    padding: 10px 20px; /* Отступы для удобства */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Добавляем тень для визуального отделения */
+    display: flex; 
+    align-items: center;
 }
 .current-order-button {
-    padding: 5px 8px;
+    padding: 10px 15px;
     border-radius: 5px;
     border: 1px solid #000000;
     background-color: #fff;
@@ -69,6 +72,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    padding: 10px 15px;
 }
 
 .search-input {
@@ -218,4 +222,65 @@
 
 .disabled {
     opacity: 0.6; /* Уменьшаем непрозрачность для отключенных кнопок */
+}
+
+
+
+
+
+
+
+.background-block {
+    background-color: #ffffff;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+    position: relative;
+    overflow: hidden;
+}
+
+.service-detail-container {
+    display: flex;
+    flex-direction: column; /* Устанавливаем вертикальную ориентацию */
+    align-items: center; /* Центрируем содержимое по горизонтали */
+    gap: 20px; /* Расстояние между элементами */
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.service-title {
+    color: #000000;
+    text-align: center; /* Выравниваем заголовок по центру */
+    margin-top: 20px;
+}
+
+.service-info {
+    display: flex; /* Используем Flexbox для размещения изображения и текста */
+    align-items: flex-start; /* Выравниваем по верхнему краю */
+    width: 100%; /* Ширина 100% для адаптивности */
+    
+}
+
+.service-text {
+    flex: 1; /* Позволяет тексту занимать доступное пространство */
+    color: #000000;
+    margin-right: 20px; /* Отступ между текстом и изображением */
+    margin-top: 350px; /* Добавляем отступ сверху, чтобы опустить текст ниже изображения */
+    white-space: nowrap;
+}
+
+.service-details {
+    list-style-type: none;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.service-detail-image {
+    max-width: 110%; /* Делает изображение адаптивным */
+    height: auto; /* Высота автоматически подстраивается под ширину */
+    border-radius: 10px;
+    display: block;
+    margin: 0 auto; /* Центрируем изображение, если нужно */
 }

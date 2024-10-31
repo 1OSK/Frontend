@@ -3,7 +3,7 @@ import { Container, Row, Col, Button, Form, Spinner, Alert } from 'react-bootstr
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../assets/style.css';
 import { Link } from 'react-router-dom';
-import Breadcrumb from '../components/Breadcrumb'; // импортируем Breadcrumb
+import Breadcrumb from '../components/Breadcrumb'; // Импортируем Breadcrumb
 
 export interface DatacenterService {
     id: number;
@@ -32,6 +32,7 @@ const EquipmentListDatacenter: React.FC = () => {
         fetchServices(); // Загружаем все товары при первом рендере
     }, []);
 
+    // Функция для получения данных услуг
     const fetchServices = async () => {
         setLoading(true);
         setError(null);
@@ -44,28 +45,30 @@ const EquipmentListDatacenter: React.FC = () => {
 
         try {
             const response = await fetch(url);
-            if (!response.ok) throw new Error('Ошибка при загрузке данных');
+            if (!response.ok) throw new Error('Ошибка при загрузке данных'); // Проверка ответа
             const data = await response.json();
-            setServices(data.datacenters);
+            setServices(data.datacenters); // Установка полученных данных
         } catch (err) {
-            setError('Ошибка при загрузке данных');
+            setError('Ошибка при загрузке данных'); // Обработка ошибок
         } finally {
-            setLoading(false);
+            setLoading(false); // Установка состояния загрузки
         }
     };
 
+    // Обработчик изменения цен
     const handlePriceChange = (setter: React.Dispatch<React.SetStateAction<number | ''>>) => 
         (e: React.ChangeEvent<HTMLInputElement>) => setter(e.target.value ? Number(e.target.value) : '');
 
+    // Обработчик поиска
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
-        fetchServices(); // вызов запроса при нажатии кнопки "Поиск"
+        fetchServices(); // Вызов запроса при нажатии кнопки "Поиск"
     };
 
     return (
         <>
             <nav className="navigation-bar">
-                <Link to="/" className="header-title">Data Center</Link> {/* Title link is separate */}
+                <Link to="/" className="header-title">Data Center</Link> {/* Ссылка на главную страницу */}
                 
                 <div className="nav-links">
                     <Link to="/datacenter-services/" className="nav-link">Список товаров</Link>
@@ -101,8 +104,8 @@ const EquipmentListDatacenter: React.FC = () => {
             <Breadcrumb items={breadcrumbItems} />
 
             <Container className="space">
-                {loading && <Spinner animation="border" />}
-                {error && <Alert variant="danger">{error}</Alert>}
+                {loading && <Spinner animation="border" />} {/* Индикатор загрузки */}
+                {error && <Alert variant="danger">{error}</Alert>} {/* Ошибка загрузки */}
 
                 <Row>
                     {services.map(service => (

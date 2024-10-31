@@ -1,21 +1,21 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { DatacenterService } from './EquipmentListDatacenter';
-import Breadcrumb from '../components/Breadcrumb'; // Импортируйте компонент Breadcrumb
+import Breadcrumb from '../components/Breadcrumb'; // Импортируем компонент Breadcrumb
 
 const EquipmentDetailDatacenter = () => {
-    const { id } = useParams();
+    const { id } = useParams<{ id: string }>(); // Получаем id из параметров
     const [equipment, setEquipment] = useState<DatacenterService | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
+    // Функция для получения информации о комплектующем
     useEffect(() => {
         const fetchEquipment = async () => {
             try {
                 const response = await fetch(`/datacenter-services/${id}/`);
                 if (!response.ok) throw new Error('Ошибка загрузки данных');
                 const data: DatacenterService = await response.json();
-                console.log('Fetched data:', data);
                 setEquipment(data);
             } catch (err) {
                 console.error('Fetch error:', err);
@@ -28,11 +28,12 @@ const EquipmentDetailDatacenter = () => {
         fetchEquipment();
     }, [id]);
 
+    // Проверяем состояния загрузки, ошибки и отсутствия данных
     if (loading) return <div>Загрузка...</div>;
     if (error) return <div>Ошибка: {error}</div>;
     if (!equipment) return <div>Нет данных для отображения.</div>;
 
-    // Определите элементы для хлебной крошки
+    // Определяем элементы для хлебной крошки
     const breadcrumbItems = [
         { label: 'Главная', path: '/' },
         { label: 'Список товаров', path: '/datacenter-services' },
@@ -42,7 +43,7 @@ const EquipmentDetailDatacenter = () => {
     return (
         <>
             <nav className="navigation-bar">
-                <Link to="/" className="header-title">Data Center</Link> {/* Title link is separate */}
+                <Link to="/" className="header-title">Data Center</Link> {/* Ссылка на главную страницу */}
                 
                 <div className="nav-links">
                     <Link to="/datacenter-services/" className="nav-link">Список товаров</Link>
@@ -52,7 +53,7 @@ const EquipmentDetailDatacenter = () => {
             {/* Хлебные крошки располагаются под навигационной панелью */}
             <Breadcrumb items={breadcrumbItems} />
 
-            <div className="background-block" style={{ paddingTop: '-10px' }}>
+            <div className="background-block" style={{ paddingTop: '20px' }}> {/* Увеличиваем верхний отступ для удобства */}
                 <div className="service-detail-container">
                     <h1 className="service-title">{equipment.name}</h1>
                     <div className="service-info">

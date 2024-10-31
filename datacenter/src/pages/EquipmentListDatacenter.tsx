@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../assets/style.css';
 import { Link } from 'react-router-dom';
 
-interface DatacenterService {
+export interface DatacenterService {
     id: number;
     name: string;
     description: string | null;
@@ -12,22 +12,31 @@ interface DatacenterService {
     price: number;
 }
 
-const EquipmentListDatacenter: React.FC<{ isAuthenticated: boolean; currentOrderId: number | null }> = ({ isAuthenticated, currentOrderId }) => {
+const EquipmentListDatacenter: React.FC = () => {
     const [services, setServices] = useState<DatacenterService[]>([]);
     const [minPrice, setMinPrice] = useState<number | ''>('');
     const [maxPrice, setMaxPrice] = useState<number | ''>('');
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    const defaultImageUrl = 'http://127.0.0.1:9000/something/default.png'; // Default image URL
+
     useEffect(() => {
-        fetchServices();
-    }, [minPrice, maxPrice]);
+        fetchServices(); // Загружаем все товары при первом рендере
+    }, []);
 
     const fetchServices = async () => {
         setLoading(true);
         setError(null);
+
+        // Формируем URL для запроса
+        let url = '/datacenter-services/';
+        if (minPrice !== '' || maxPrice !== '') {
+            url += `?datacenter_min_price=${minPrice}&datacenter_max_price=${maxPrice}`;
+        }
+
         try {
-            const response = await fetch(`/datacenter-services/?datacenter_min_price=${minPrice}&datacenter_max_price=${maxPrice}`);
+            const response = await fetch(url);
             if (!response.ok) throw new Error('Ошибка при загрузке данных');
             const data = await response.json();
             setServices(data.datacenters);
@@ -41,15 +50,20 @@ const EquipmentListDatacenter: React.FC<{ isAuthenticated: boolean; currentOrder
     const handlePriceChange = (setter: React.Dispatch<React.SetStateAction<number | ''>>) => 
         (e: React.ChangeEvent<HTMLInputElement>) => setter(e.target.value ? Number(e.target.value) : '');
 
-    const handleAddToOrder = (serviceId: number) => {
-        console.log(`Добавлено в заказ: ${serviceId}`);
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        fetchServices(); // вызов запроса при нажатии кнопки "Поиск"
     };
 
     return (
         <>
             <nav className="navigation-bar">
-                <Link to="/" className="header-title">Data Center</Link>
-                <Form className="search-form" onSubmit={(e) => { e.preventDefault(); fetchServices(); }}>
+            <Link to="/" className="header-title">Data Center</Link> {/* Title link is separate */}
+                
+                <div className="nav-links">
+                    <Link to="/datacenter-services/" className="nav-link">Список товаров</Link>
+                </div>
+                <Form className="search-form" onSubmit={handleSearch}>
                     <Form.Group className="d-flex">
                         <Form.Control
                             type="number"
@@ -70,22 +84,16 @@ const EquipmentListDatacenter: React.FC<{ isAuthenticated: boolean; currentOrder
                         <Button variant="primary" type="submit" className="search-button">Поиск</Button>
                     </Form.Group>
                 </Form>
-        
-                <div className={`order-info ${!isAuthenticated ? 'inactive' : ''}`}>
-                    {isAuthenticated && currentOrderId ? (
-                        <Link to={`/order-detail/${currentOrderId}`} className="current-order-button">
-                            Текущий заказ (Оборудование: {/* Тут можно указать количество оборудования */} 0)
-                        </Link>
-                    ) : (
-                        <span className="current-order-button disabled">Текущий заказ недоступен</span>
-                    )}
+
+                <div className="order-info inactive">
+                    <span className="current-order-button disabled">Текущий заказ недоступен</span>
                 </div>
             </nav>
-        
+
             <Container className="space">
                 {loading && <Spinner animation="border" />}
                 {error && <Alert variant="danger">{error}</Alert>}
-        
+
                 <Row>
                     {services.map(service => (
                         <Col key={service.id} md={4} className="mb-4">
@@ -94,26 +102,19 @@ const EquipmentListDatacenter: React.FC<{ isAuthenticated: boolean; currentOrder
                                     <p className="title">{service.name}</p>
                                 </Link>
                                 <div className="image-container">
-                                    {service.image_url ? (
-                                        <img src={service.image_url} alt={service.name} className="service-image" />
-                                    ) : (
-                                        <div className="no-image">
-                                            <span>Нет изображения</span>
-                                        </div>
-                                    )}
+                                    <img 
+                                        src={service.image_url || defaultImageUrl} 
+                                        alt={service.name} 
+                                        className="service-image" 
+                                    />
                                 </div>
                                 <div className="card-price-button-container" style={{ marginTop: 'auto' }}>
                                     {service.price && <p className="price">{service.price} руб.</p>}
                                     <div className="button-container">
                                         <Link to={`/datacenter-services/${service.id}/`} className="card-button">Подробнее о комплектующем</Link>
                                         <div className="add-button-container">
-                                            {isAuthenticated ? (
-                                                <Button variant="success" onClick={() => handleAddToOrder(service.id)} className="card-button">
-                                                    Добавить в заказ
-                                                </Button>
-                                            ) : (
-                                                <Button variant="secondary" disabled className="card-button disabled">Добавить в заказ</Button>
-                                            )}
+                                            {/* Кнопка добавления в заказ всегда неактивная */}
+                                            <Button variant="secondary" disabled className="card-button disabled">Добавить в заказ</Button>
                                         </div>
                                     </div>
                                 </div>

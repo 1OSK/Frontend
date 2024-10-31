@@ -1,23 +1,25 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { DatacenterService } from './EquipmentListDatacenter';
+
 
 const EquipmentDetailDatacenter = () => {
     const { id } = useParams();
-    const [equipment, setEquipment] = useState(null);
+    const [equipment, setEquipment] = useState<DatacenterService | null>(null);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchEquipment = async () => {
             try {
                 const response = await fetch(`/datacenter-services/${id}/`);
                 if (!response.ok) throw new Error('Ошибка загрузки данных');
-                const data = await response.json();
-                console.log('Fetched data:', data); // Логируем данные
+                const data: DatacenterService = await response.json();
+                console.log('Fetched data:', data);
                 setEquipment(data);
             } catch (err) {
                 console.error('Fetch error:', err);
-                setError(err.message);
+                setError((err as Error).message); 
             } finally {
                 setLoading(false);
             }
@@ -32,20 +34,22 @@ const EquipmentDetailDatacenter = () => {
 
     return (
         <>
-            {/* Навигационная панель вне background-block */}
             <nav className="navigation-bar">
-                <Link to="/" className="header-title">Data Center</Link>
+            <Link to="/" className="header-title">Data Center</Link> {/* Title link is separate */}
+                
+                <div className="nav-links">
+                    <Link to="/datacenter-services/" className="nav-link">Список товаров</Link>
+                </div>
             </nav>
             
-            <div className="background-block" style={{ paddingTop: '60px' }}> {/* Отступ сверху для контента, чтобы не перекрывать навигацию */}
+            <div className="background-block" style={{ paddingTop: '60px' }}>
                 <div className="service-detail-container">
                     <h1 className="service-title">{equipment.name}</h1>
                     <div className="service-info">
-                        <div className="service-text"> {/* Новый контейнер для текста */}
+                        <div className="service-text">
                             <ul className="service-details">
-                                {/* Разделяем описание на отдельные строки */}
                                 {equipment.description ? (
-                                    equipment.description.split(',').map((item, index) => (
+                                    equipment.description.split(',').map((item: string, index: number) => (
                                         <li key={index}>• {item.trim()}</li>
                                     ))
                                 ) : (

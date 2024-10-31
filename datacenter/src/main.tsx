@@ -5,12 +5,18 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import './index.css';
 import EquipmentListDatacenter from './pages/EquipmentListDatacenter';
 import EquipmentDetailDatacenter from './pages/EquipmentDetailDatacenter';
+import HomeDatacenter from './pages/HomeDatacenter';
+
 
 // Создаем маршрутизатор
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <EquipmentListDatacenter isAuthenticated={false} currentOrderId={null} />,
+    element: <HomeDatacenter />,
+  },
+  {
+    path: '/datacenter-services',
+    element: <EquipmentListDatacenter />,
   },
   {
     path: '/datacenter-services/:id',  // Динамический маршрут для деталей оборудования

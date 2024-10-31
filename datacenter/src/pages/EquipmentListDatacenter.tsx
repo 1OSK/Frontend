@@ -3,6 +3,7 @@ import { Container, Row, Col, Button, Form, Spinner, Alert } from 'react-bootstr
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../assets/style.css';
 import { Link } from 'react-router-dom';
+import Breadcrumb from '../components/Breadcrumb'; // импортируем Breadcrumb
 
 export interface DatacenterService {
     id: number;
@@ -19,7 +20,13 @@ const EquipmentListDatacenter: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const defaultImageUrl = 'http://127.0.0.1:9000/something/default.png'; // Default image URL
+    const defaultImageUrl = 'http://127.0.0.1:9000/something/default.png'; // URL изображения по умолчанию
+
+    // Определяем хлебные крошки
+    const breadcrumbItems = [
+        { label: 'Главная', path: '/' },
+        { label: 'Список товаров', path: '/datacenter-services' },
+    ];
 
     useEffect(() => {
         fetchServices(); // Загружаем все товары при первом рендере
@@ -58,7 +65,7 @@ const EquipmentListDatacenter: React.FC = () => {
     return (
         <>
             <nav className="navigation-bar">
-            <Link to="/" className="header-title">Data Center</Link> {/* Title link is separate */}
+                <Link to="/" className="header-title">Data Center</Link> {/* Title link is separate */}
                 
                 <div className="nav-links">
                     <Link to="/datacenter-services/" className="nav-link">Список товаров</Link>
@@ -89,6 +96,9 @@ const EquipmentListDatacenter: React.FC = () => {
                     <span className="current-order-button disabled">Текущий заказ недоступен</span>
                 </div>
             </nav>
+            
+            {/* Добавляем хлебные крошки */}
+            <Breadcrumb items={breadcrumbItems} />
 
             <Container className="space">
                 {loading && <Spinner animation="border" />}

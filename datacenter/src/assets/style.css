@@ -15,7 +15,8 @@
     padding: 20px; /* Можно добавить внутренний отступ, если нужно */
     max-width: 100%; /* Убедитесь, что ширина ограничена только 100% */
     box-sizing: border-box; /* Включаем отступы и границы в ширину */
-    margin-top: 100px;
+    margin-top: -30px;
+    
 }
 
 
@@ -119,7 +120,7 @@
     border-radius: 20px;
     background-color: #ffffff;
     padding: 30px;
-
+    
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     margin: 10px;
     width: 100%;
@@ -240,6 +241,7 @@
     margin-right: calc(-50vw + 50%);
     position: relative;
     overflow: hidden;
+    margin-top: -20px;
 }
 
 .service-detail-container {
@@ -331,4 +333,29 @@ body {
 .nav-links {
     display: flex;
     align-items: center; /* Center links vertically */
+}
+
+
+
+
+
+
+
+/* src/components/Breadcrumb.css */
+
+.breadcrumb {
+    margin: 16px 0;
+    font-size: 14px;
+    margin-top: 70px;
+    padding: 40px;
+}
+
+.breadcrumb-link {
+    text-decoration: none;
+    color: #000000; /* Цвет ссылки */
+}
+
+.breadcrumb-link:hover {
+    text-decoration: underline; /* Подчеркивание при наведении */
+    color: #3faf4a;
 }

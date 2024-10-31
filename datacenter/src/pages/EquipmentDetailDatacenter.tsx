@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { DatacenterService } from './EquipmentListDatacenter';
-
+import Breadcrumb from '../components/Breadcrumb'; // Импортируйте компонент Breadcrumb
 
 const EquipmentDetailDatacenter = () => {
     const { id } = useParams();
@@ -32,17 +32,27 @@ const EquipmentDetailDatacenter = () => {
     if (error) return <div>Ошибка: {error}</div>;
     if (!equipment) return <div>Нет данных для отображения.</div>;
 
+    // Определите элементы для хлебной крошки
+    const breadcrumbItems = [
+        { label: 'Главная', path: '/' },
+        { label: 'Список товаров', path: '/datacenter-services' },
+        { label: equipment.name, path: '#' } // Текущий элемент не должен вести никуда
+    ];
+
     return (
         <>
             <nav className="navigation-bar">
-            <Link to="/" className="header-title">Data Center</Link> {/* Title link is separate */}
+                <Link to="/" className="header-title">Data Center</Link> {/* Title link is separate */}
                 
                 <div className="nav-links">
                     <Link to="/datacenter-services/" className="nav-link">Список товаров</Link>
                 </div>
             </nav>
             
-            <div className="background-block" style={{ paddingTop: '60px' }}>
+            {/* Хлебные крошки располагаются под навигационной панелью */}
+            <Breadcrumb items={breadcrumbItems} />
+
+            <div className="background-block" style={{ paddingTop: '-10px' }}>
                 <div className="service-detail-container">
                     <h1 className="service-title">{equipment.name}</h1>
                     <div className="service-info">

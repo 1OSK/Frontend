@@ -11,11 +11,12 @@
 
 .space {
     width: 100%;
-    margin: 0 auto;
+    
     padding: 20px; /* Можно добавить внутренний отступ, если нужно */
     max-width: 100%; /* Убедитесь, что ширина ограничена только 100% */
     box-sizing: border-box; /* Включаем отступы и границы в ширину */
     margin-top: -30px;
+    
     
 }
 
@@ -105,13 +106,9 @@
     margin: 20px auto; /* Центрируем спиннер */
 }
 
-.alert {
-    margin-top: 20px; /* Отступ сверху для ошибок */
-}
 
-/* Стили для карточек */
+
 .card {
-    
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -119,13 +116,21 @@
     color: inherit;
     border-radius: 20px;
     background-color: #ffffff;
-    padding: 30px;
-    
+    padding: 20px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    margin: 10px;
+
+    width: 100%; 
+    min-height: 600px; /* Увеличьте высоту для лучшего отображения */
+    min-width: 450px;
+}
+
+.service-image {
     width: 100%;
-    min-height: 350px; /* Минимальная высота для равномерного отображения карточек */
-    height: 100%; /* Чтобы карточки выравнивались по высоте внутри контейнера */
+    height: auto; /* Позволяет изображению адаптироваться */
+    min-height: 150px; /* Минимальная высота для изображения */
+    object-fit: cover; /* Сохраняет пропорции изображения */
+    border-radius: 10px; /* Закругление углов изображения */
 }
 .card-title {
     text-decoration: none; /* Убираем подчеркивание */
@@ -154,13 +159,10 @@
     align-items: center; /* Центрируем содержимое по вертикали */
     overflow: hidden; /* Скрываем переполненное содержимое */
     min-height: 200px; /* Минимальная высота для изображения */
+    min-width: 200px;
 }
 
-.service-image {
-    width: 100%; /* Адаптивная ширина изображения */
-    height: auto; /* Сохраняем пропорции изображения */
-    max-height: 100%; /* Не позволяет изображению превышать размеры контейнера */
-}
+
 
 .no-image {
     background-color: #e9ecef; /* Серый фон для отсутствующего изображения */

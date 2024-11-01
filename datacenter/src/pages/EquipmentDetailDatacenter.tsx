@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { DatacenterService } from './EquipmentListDatacenter';
-import Breadcrumb from '../components/Breadcrumb'; // Импортируем компонент Breadcrumb
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '../assets/style.css';
+import { DatacenterService, mockData } from './EquipmentListDatacenter'; // Предполагается, что mockData определены здесь
+import Breadcrumb from '../components/Breadcrumb';
 
 const EquipmentDetailDatacenter = () => {
     const { id } = useParams<{ id: string }>(); // Получаем id из параметров
@@ -14,12 +16,19 @@ const EquipmentDetailDatacenter = () => {
         const fetchEquipment = async () => {
             try {
                 const response = await fetch(`/datacenter-services/${id}/`);
-                if (!response.ok) throw new Error('Ошибка загрузки данных');
+                if (!response.ok) throw new Error(`Ошибка загрузки данных: ${response.statusText}`);
                 const data: DatacenterService = await response.json();
                 setEquipment(data);
             } catch (err) {
                 console.error('Fetch error:', err);
-                setError((err as Error).message); 
+                // Используем моковые данные
+                const mockItem = mockData.find(item => item.id === Number(id));
+                if (mockItem) {
+                    setEquipment(mockItem);
+                    setError(null); // Сбрасываем ошибку, если нашли моковые данные
+                } else {
+                    setError('Комплектующее не найдено в моковых данных.');
+                }
             } finally {
                 setLoading(false);
             }
@@ -43,17 +52,15 @@ const EquipmentDetailDatacenter = () => {
     return (
         <>
             <nav className="navigation-bar">
-                <Link to="/" className="header-title">Data Center</Link> {/* Ссылка на главную страницу */}
-                
+                <Link to="/" className="header-title">Data Center</Link>
                 <div className="nav-links">
                     <Link to="/datacenter-services/" className="nav-link">Список товаров</Link>
                 </div>
             </nav>
-            
-            {/* Хлебные крошки располагаются под навигационной панелью */}
+
             <Breadcrumb items={breadcrumbItems} />
 
-            <div className="background-block" style={{ paddingTop: '20px' }}> {/* Увеличиваем верхний отступ для удобства */}
+            <div className="background-block" style={{ paddingTop: '20px' }}>
                 <div className="service-detail-container">
                     <h1 className="service-title">{equipment.name}</h1>
                     <div className="service-info">
@@ -69,8 +76,10 @@ const EquipmentDetailDatacenter = () => {
                             </ul>
                             <p className="price"><strong>Цена:</strong> {equipment.price} руб.</p>
                         </div>
-                        {equipment.image_url && (
+                        {equipment.image_url ? (
                             <img src={equipment.image_url} alt={equipment.name} className="service-detail-image" />
+                        ) : (
+                            <img src="http://127.0.0.1:9000/something/default.png" alt="Изображение отсутствует" className="service-detail-image" />
                         )}
                     </div>
                 </div>

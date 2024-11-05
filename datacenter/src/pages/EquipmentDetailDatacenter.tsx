@@ -2,30 +2,30 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../assets/style.css';
-import { DatacenterService, mockData } from './EquipmentListDatacenter'; // Предполагается, что mockData определены здесь
+import { DatacenterService, mockData } from './EquipmentListDatacenter'; // Импортируем интерфейс и mockData
 import Breadcrumb from '../components/Breadcrumb';
 
 const EquipmentDetailDatacenter = () => {
-    const { id } = useParams<{ id: string }>(); // Получаем id из параметров
+    const { id } = useParams<{ id: string }>();
     const [equipment, setEquipment] = useState<DatacenterService | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    // Функция для получения информации о комплектующем
     useEffect(() => {
         const fetchEquipment = async () => {
             try {
                 const response = await fetch(`/datacenter-services/${id}/`);
                 if (!response.ok) throw new Error(`Ошибка загрузки данных: ${response.statusText}`);
+                
                 const data: DatacenterService = await response.json();
                 setEquipment(data);
             } catch (err) {
-                console.error('Fetch error:', err);
-                // Используем моковые данные
+                console.error('Ошибка запроса:', err);
+                
                 const mockItem = mockData.find(item => item.id === Number(id));
                 if (mockItem) {
                     setEquipment(mockItem);
-                    setError(null); // Сбрасываем ошибку, если нашли моковые данные
+                    setError(null);
                 } else {
                     setError('Комплектующее не найдено в моковых данных.');
                 }
@@ -37,7 +37,7 @@ const EquipmentDetailDatacenter = () => {
         fetchEquipment();
     }, [id]);
 
-    // Проверяем состояния загрузки, ошибки и отсутствия данных
+    // Рендерим состояние загрузки или ошибки
     if (loading) return <div>Загрузка...</div>;
     if (error) return <div>Ошибка: {error}</div>;
     if (!equipment) return <div>Нет данных для отображения.</div>;
@@ -46,7 +46,7 @@ const EquipmentDetailDatacenter = () => {
     const breadcrumbItems = [
         { label: 'Главная', path: '/' },
         { label: 'Список товаров', path: '/datacenter-services' },
-        { label: equipment.name, path: '#' } // Текущий элемент не должен вести никуда
+        { label: equipment.name, path: '#' },
     ];
 
     return (
@@ -67,7 +67,7 @@ const EquipmentDetailDatacenter = () => {
                         <div className="service-text">
                             <ul className="service-details">
                                 {equipment.description ? (
-                                    equipment.description.split(',').map((item: string, index: number) => (
+                                    equipment.description.split(',').map((item, index) => (
                                         <li key={index}>• {item.trim()}</li>
                                     ))
                                 ) : (
@@ -76,11 +76,11 @@ const EquipmentDetailDatacenter = () => {
                             </ul>
                             <p className="price"><strong>Цена:</strong> {equipment.price} руб.</p>
                         </div>
-                        {equipment.image_url ? (
-                            <img src={equipment.image_url} alt={equipment.name} className="service-detail-image" />
-                        ) : (
-                            <img src="http://127.0.0.1:9000/something/default.png" alt="Изображение отсутствует" className="service-detail-image" />
-                        )}
+                        <img 
+                            src={equipment.image_url || "http://127.0.0.1:9000/something/default.png"} 
+                            alt={equipment.name} 
+                            className="service-detail-image" 
+                        />
                     </div>
                 </div>
             </div>

@@ -1,13 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import '../assets/style.css';
 
 const HomeDatacenter: React.FC = () => {
+
+    useEffect(() => {
+        console.log("Компонент HomeDatacenter был смонтирован!");
+
+    }, []);
+
     return (
         <>
             {/* Навигационная панель */}
             <nav className="navigation-bar">
-            <Link to="/" className="header-title">Data Center</Link> {/* Title link is separate */}
+                <Link to="/" className="header-title">Data Center</Link>
                 
                 <div className="nav-links">
                     <Link to="/datacenter-services/" className="nav-link">Список товаров</Link>

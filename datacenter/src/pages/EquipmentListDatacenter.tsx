@@ -64,19 +64,19 @@ const EquipmentListDatacenter: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const defaultImageUrl = 'http://127.0.0.1:9000/something/default.png'; // URL изображения по умолчанию
+    const defaultImageUrl = 'http://127.0.0.1:9000/something/default.png';
 
     const breadcrumbItems = [
         { label: 'Главная', path: '/' },
         { label: 'Список товаров', path: '/datacenter-services' },
     ];
 
-
-
+    // componentDidMount: выполняется один раз при монтировании компонента
     useEffect(() => {
         fetchServices();
     }, []);
 
+    // Функция для получения данных
     const fetchServices = async () => {
         setLoading(true);
         setError(null);
@@ -99,13 +99,14 @@ const EquipmentListDatacenter: React.FC = () => {
         }
     };
 
-    const handlePriceChange = (setter: React.Dispatch<React.SetStateAction<number | ''>>) => 
-        (e: React.ChangeEvent<HTMLInputElement>) => setter(e.target.value ? Number(e.target.value) : '');
-
+    // componentDidUpdate: логика поиска выполняется при нажатии кнопки "Поиск"
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
-        fetchServices();
+        fetchServices(); // вызываем fetchServices с фильтром
     };
+
+    const handlePriceChange = (setter: React.Dispatch<React.SetStateAction<number | ''>>) => 
+        (e: React.ChangeEvent<HTMLInputElement>) => setter(e.target.value ? Number(e.target.value) : '');
 
     return (
         <>

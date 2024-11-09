@@ -1,0 +1,33 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+# Временные файлы для окружения
+.env
+.env.*.local
+# Кеши
+.cache/
+dist/
+.vite/
+*.tsbuildinfo
+# Папки и файлы, созданные IDE
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+# Логи
+*.log
+# Кеш для тестирования
+coverage/
+# Папка для билдов и статики
+build/
+# Папка с изображениями, сгенерированными в процессе разработки
+public/static/
+# Отчеты от lint и форматирования
+report.html
+stylelintcache

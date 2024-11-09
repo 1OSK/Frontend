@@ -15,7 +15,7 @@
     padding: 20px; /* Можно добавить внутренний отступ, если нужно */
     max-width: 100%; /* Убедитесь, что ширина ограничена только 100% */
     box-sizing: border-box; /* Включаем отступы и границы в ширину */
-    margin-top: -30px;
+    margin-top: 10px;
     
     
 }
@@ -349,7 +349,7 @@ body {
     margin: 16px 0;
     font-size: 14px;
     margin-top: 70px;
-    padding: 40px;
+    
 }
 
 .breadcrumb-link {
@@ -360,4 +360,25 @@ body {
 .breadcrumb-link:hover {
     text-decoration: underline; /* Подчеркивание при наведении */
     color: #3faf4a;
+}
+.breadcrumb-controls {
+    display: flex;
+    align-items: center;
+    margin-left: auto; /* Отодвигает фильтр и кнопку корзины вправо */
+    margin-top: 60px;
+}
+.order-info {
+    display: flex;
+    align-items: center;
+    
+}
+.breadcrumb-container {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    border-bottom: 1px solid #ddd;
+    background-color: #ffffff;
+    position: sticky;
+    top: 20px; /* Учитываем высоту навигационной панели */
+    z-index: 999; /* Чуть ниже навигации, чтобы не перекрывать её */
 }

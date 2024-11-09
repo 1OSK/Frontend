@@ -115,33 +115,39 @@ const EquipmentListDatacenter: React.FC = () => {
                 <div className="nav-links">
                     <Link to="/datacenter-services/" className="nav-link">Список товаров</Link>
                 </div>
-                <Form className="search-form" onSubmit={handleSearch}>
-                    <Form.Group className="d-flex">
-                        <Form.Control
-                            type="number"
-                            placeholder="Минимальная цена..."
-                            value={minPrice}
-                            onChange={handlePriceChange(setMinPrice)}
-                            min="0"
-                            className="search-input"
-                        />
-                        <Form.Control
-                            type="number"
-                            placeholder="Максимальная цена..."
-                            value={maxPrice}
-                            onChange={handlePriceChange(setMaxPrice)}
-                            min="0"
-                            className="search-input"
-                        />
-                        <Button variant="primary" type="submit" className="search-button">Поиск</Button>
-                    </Form.Group>
-                </Form>
-                <div className="order-info inactive">
-                    <span className="current-order-button disabled">Текущий заказ недоступен</span>
-                </div>
             </nav>
 
+            <div className="breadcrumb-container">
             <Breadcrumb items={breadcrumbItems} />
+
+            <div className="breadcrumb-controls">
+                {/* Search Form for Filtering */}
+                <Form className="search-form d-flex me-3" onSubmit={handleSearch}>
+                    <Form.Control
+                        type="number"
+                        placeholder="Минимальная цена..."
+                        value={minPrice}
+                        onChange={handlePriceChange(setMinPrice)}
+                        min="0"
+                        className="search-input me-2"
+                    />
+                    <Form.Control
+                        type="number"
+                        placeholder="Максимальная цена..."
+                        value={maxPrice}
+                        onChange={handlePriceChange(setMaxPrice)}
+                        min="0"
+                        className="search-input me-2"
+                    />
+                    <Button variant="primary" type="submit" className="search-button">Поиск</Button>
+                </Form>
+
+                {/* Cart Button */}
+                <div className="order-info">
+                    <span className="current-order-button disabled">Текущий заказ недоступен</span>
+                </div>
+            </div>
+        </div>
 
             <Container className="space">
                 {loading && <Spinner animation="border" />}

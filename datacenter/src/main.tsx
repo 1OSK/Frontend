@@ -51,6 +51,20 @@ const router = createBrowserRouter(
   }
 );
 
+// Регистрация сервис-воркера
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register('/serviceWorker.js') // Путь к сервис-воркеру
+      .then((registration) => {
+        console.log('Сервис-воркер зарегистрирован:', registration);
+      })
+      .catch((error) => {
+        console.log('Ошибка регистрации сервис-воркера:', error);
+      });
+  });
+}
+
 // Рендерим приложение
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

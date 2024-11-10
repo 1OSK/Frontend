@@ -10,29 +10,20 @@
 
 
 .space {
-    width: 100%;
-    
+
     padding: 20px; /* Можно добавить внутренний отступ, если нужно */
-    max-width: 100%; /* Убедитесь, что ширина ограничена только 100% */
-    box-sizing: border-box; /* Включаем отступы и границы в ширину */
-    margin-top: 10px;
-    
-    
+
 }
 
 
 .navigation-bar {
-    position: fixed; /* Фиксируем навигационную панель */
-    top: 0; /* Прикрепляем к верхней части окна */
-    left: 0; /* Прикрепляем к левой части окна */
-    width: 100%; /* Ширина 100% */
-    background-color: #000000; /* Цвет фона для четкого отделения */
-    z-index: 1000; /* Устанавливаем высокий z-index, чтобы она была над другими элементами */
-    padding: 10px 20px; /* Отступы для удобства */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Добавляем тень для визуального отделения */
-    display: flex; 
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-}
+    padding: 10px;
+    background-color: #000000;
+  }
+
 .current-order-button {
     padding: 10px 15px;
     border-radius: 5px;
@@ -71,17 +62,19 @@
 .header-title:hover {
     color: #85888c;
 }
+
 .search-form {
     display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 15px;
-    
+    flex-wrap: wrap; /* Разрешаем перенос элементов, если они не помещаются */
+    gap: 10px; /* Отступ между элементами */
+    justify-content: space-between; /* Распределение элементов по всей ширине */
+    width: 100%;
 }
 
+
 .search-input {
-    width: 200px; /* Ширина поля ввода */
-    margin-right: 10px; /* Отступ справа */
+    width: 200px;
+    margin-right: 10px;
 }
 .search-button {
     padding: 10px 15px;
@@ -112,33 +105,22 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    text-decoration: none;
-    color: inherit;
-    border-radius: 20px;
-    background-color: #ffffff;
-    padding: 20px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-    width: 100%; 
-    min-height: 600px; /* Увеличьте высоту для лучшего отображения */
-    min-width: 450px;
+    background-color: #f4f4f4;
+    border-radius: 10px;
+    padding: 15px;
+    height: 100%;
 }
 
 .service-image {
-    width: 100%;
-    height: auto; /* Позволяет изображению адаптироваться */
-    min-height: 150px; /* Минимальная высота для изображения */
-    object-fit: cover; /* Сохраняет пропорции изображения */
-    border-radius: 10px; /* Закругление углов изображения */
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
 }
 .card-title {
-    text-decoration: none; /* Убираем подчеркивание */
-    color: #333; /* Цвет текста заголовка */
-    font-weight: bold; /* Жирный текст */
-    margin-bottom: 10px; /* Отступ снизу */
-    font-size: 1.25rem; /* Размер шрифта (можно изменить для увеличения) */
-    line-height: 1.5; /* Высота строки для лучшего восприятия */
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
 }
 .card:hover {
     transform: translateY(-10px);
@@ -146,20 +128,15 @@
 }
 
 .card-title {
-    text-decoration: none; /* Убираем подчеркивание */
-    color: #333; /* Цвет текста заголовка */
-    font-weight: bold; /* Жирный текст */
-    margin-bottom: 10px; /* Отступ снизу */
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
 }
 
 .image-container {
-    flex-grow: 1; /* Позволяет изображению занимать оставшееся пространство */
-    display: flex; /* Используем flexbox для центровки */
-    justify-content: center; /* Центрируем содержимое по горизонтали */
-    align-items: center; /* Центрируем содержимое по вертикали */
-    overflow: hidden; /* Скрываем переполненное содержимое */
-    min-height: 200px; /* Минимальная высота для изображения */
-    min-width: 200px;
+    width: 100%;
+    text-align: center;
 }
 
 
@@ -176,19 +153,14 @@
 
 .card-price-button-container {
     display: flex;
-    justify-content: space-start;
-    align-items: center;
-    margin-top: auto;
-    padding-top: 20px;
-    gap: 10px; 
+    justify-content: flex-end;
+    margin-top: auto; 
 }
 
 .price {
     font-size: 18px;
     font-weight: 500;
     color: #333;
-    margin: 0;
-    white-space: nowrap; /* Предотвращает перенос текста */
     align-self: flex-end;
 }
 
@@ -202,21 +174,17 @@
 }
 
 .card-button {
-    padding: 10px 15px; 
-    border-radius: 3px;
+    
     border: 1px solid #3faf4a; 
     text-decoration: none;
-    font-size: 14px; 
-    font-weight: 500; 
     color: #3faf4a; 
     background-color: #fff; 
-    transition: background-color 0.3s ease, color 0.3s ease;
-    text-align: center; 
-    display: inline-block; 
-    white-space: nowrap; 
-    overflow: hidden; 
-    text-overflow: ellipsis; 
-    max-width: 100%; 
+    margin-top: 10px;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+
 }
 .card-button:hover {
     background-color: #3faf4a;
@@ -230,11 +198,107 @@
     opacity: 0.6; /* Уменьшаем непрозрачность для отключенных кнопок */
 }
 
+/* Для iPhone 13 Mini (ширина экрана 375px) */
+@media (max-width: 375px) {
+    .header-title {
+        font-size: 24px;
+    }
 
+    /* Сужаем ширину формы поиска */
+    .search-form {
+        width: 90%;
+    }
 
+    /* Уменьшаем ширину полей ввода */
+    .search-input {
+        width: 100%;
+    }
 
+    /* Адаптируем карточки */
+    .card {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background-color: #f4f4f4;
+        border-radius: 10px;
+        padding: 15px;
+        width: 100%;
+    }
 
+    .service-image {
+        width: 100%;
+        height: auto;
+    }
 
+    /* Позиционирование кнопки и цены */
+    .card-price-button-container {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        padding: 5px;
+        align-items: center;
+    }
+
+    .price {
+        font-size: 14px;
+        text-align: center;
+    }
+
+    .card-button {
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+
+    /* Меньше отступов и шрифта для элементов в хлебных крошках */
+    .breadcrumb-controls {
+        gap: 0px;
+        padding: 0 5px;
+    }
+
+    .search-form .search-input,
+    .search-button {
+        font-size: 5px;
+        padding: 9px;
+    }
+
+    .order-info {
+        margin-top: 0px;
+    }
+
+    .current-order-button {
+        font-size: 20px;
+        padding: 5px 5px;
+    }
+
+}
+
+/* Для экранов с шириной до 320px (старые устройства) */
+@media (max-width: 320px) {
+    .header-title {
+        font-size: 20px; /* Уменьшаем заголовок */
+    }
+
+    .search-form {
+        width: 90%;
+    }
+
+    .card {
+        padding: 6px;
+        width: 100%;
+    }
+
+    .price {
+        font-size: 12px;
+    }
+
+    .card-button {
+        padding: 6px 10px;
+    }
+
+    .card-title {
+        font-size: 16px;
+    }
+}
 
 .background-block {
     background-color: #ffffff;
@@ -313,14 +377,14 @@
 
 body {
     display: flex;
-    flex-direction: column; /* Вертикальная ориентация */
-    min-height: 100vh; /* Минимальная высота 100% от высоты окна */
+    flex-direction: column;
+    min-height: 100vh; /* Обеспечивает использование всей высоты экрана */
     margin: 0; /* Убираем стандартные отступы */
-    justify-content: center; /* Центрируем по вертикали */
-    align-items: center; /* Центрируем по горизонтали */
-    text-align: center; /* Центрируем текст */
+    justify-content: flex-start; /* Центрируем содержимое по вертикали */
+    align-items: center;
+    text-align: center;
+    overflow: auto; /* Разрешаем прокрутку, если контент не помещается */
 }
-
 .nav-link {
     text-decoration: none; /* Remove underline */
     color: #ffffff; /* Bootstrap primary color or any color of your choice */
@@ -334,8 +398,8 @@ body {
 }
 .nav-links {
     display: flex;
-    align-items: center; /* Center links vertically */
-}
+    gap: 15px;
+  }
 
 
 
@@ -348,7 +412,7 @@ body {
 .breadcrumb {
     margin: 16px 0;
     font-size: 14px;
-    margin-top: 70px;
+    
     
 }
 
@@ -365,7 +429,7 @@ body {
     display: flex;
     align-items: center;
     margin-left: auto; /* Отодвигает фильтр и кнопку корзины вправо */
-    margin-top: 60px;
+    margin-top: 0px;
 }
 .order-info {
     display: flex;
@@ -373,12 +437,9 @@ body {
     
 }
 .breadcrumb-container {
-    display: flex;
-    align-items: center;
-    padding: 10px 20px;
-    border-bottom: 1px solid #ddd;
-    background-color: #ffffff;
-    position: sticky;
-    top: 20px; /* Учитываем высоту навигационной панели */
-    z-index: 999; /* Чуть ниже навигации, чтобы не перекрывать её */
-}
+    width: 100%;
+    padding: 20px;
+    max-height: 300px;
+    
+  }
+  

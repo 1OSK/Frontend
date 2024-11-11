@@ -10,6 +10,11 @@ const EquipmentDetailDatacenter = () => {
     const [equipment, setEquipment] = useState<DatacenterService | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [menuActive, setMenuActive] = useState(false); // State for burger menu
+
+    const toggleMenu = () => {
+        setMenuActive(!menuActive);
+    };
 
     useEffect(() => {
         const fetchEquipment = async () => {
@@ -51,10 +56,19 @@ const EquipmentDetailDatacenter = () => {
 
     return (
         <>
-            <nav className="navigation-bar">
+            {/* Навигационная панель */}
+            <nav className="navigation-bar mb-0">
                 <Link to="/" className="header-title">Data Center</Link>
-                <div className="nav-links">
+                
+                <div className={`nav-links ${menuActive ? 'active' : ''}`}>
                     <Link to="/datacenter-services/" className="nav-link">Список товаров</Link>
+                </div>
+
+                {/* Бургер-иконка */}
+                <div className={`burger-menu ${menuActive ? 'active' : ''}`} onClick={toggleMenu}>
+                    <div className="burger-line"></div>
+                    <div className="burger-line"></div>
+                    <div className="burger-line"></div>
                 </div>
             </nav>
 
@@ -64,23 +78,25 @@ const EquipmentDetailDatacenter = () => {
                 <div className="service-detail-container">
                     <h1 className="service-title">{equipment.name}</h1>
                     <div className="service-info">
-                        <div className="service-text">
-                            <ul className="service-details">
-                                {equipment.description ? (
-                                    equipment.description.split(',').map((item, index) => (
-                                        <li key={index}>• {item.trim()}</li>
-                                    ))
-                                ) : (
-                                    <li>Информация о деталях недоступна.</li>
-                                )}
-                            </ul>
-                            <p className="price"><strong>Цена:</strong> {equipment.price} руб.</p>
-                        </div>
                         <img 
                             src={equipment.image_url || "http://127.0.0.1:9000/something/default.png"} 
                             alt={equipment.name} 
                             className="service-detail-image" 
                         />
+                        <div className="service-text-container">
+                            <div className="service-text">
+                                <ul className="service-details">
+                                    {equipment.description ? (
+                                        equipment.description.split(',').map((item, index) => (
+                                            <li key={index}>• {item.trim()}</li>
+                                        ))
+                                    ) : (
+                                        <li>Информация о деталях недоступна.</li>
+                                    )}
+                                </ul>
+                                <p className="price"><strong>Цена:</strong> {equipment.price} руб.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

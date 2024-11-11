@@ -17,12 +17,18 @@
 
 
 .navigation-bar {
+    width: 100%;
+    height: 45px; /* Define a fixed height */
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
+    padding: 10px 20px;
     background-color: #000000;
-  }
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100; /* Ensure it's above other content */
+}
 
 .current-order-button {
     padding: 10px 15px;
@@ -65,12 +71,9 @@
 
 .search-form {
     display: flex;
-    flex-wrap: wrap; /* Разрешаем перенос элементов, если они не помещаются */
-    gap: 10px; /* Отступ между элементами */
-    justify-content: space-between; /* Распределение элементов по всей ширине */
-    width: 100%;
-}
-
+    justify-content: flex-start;
+    align-items: center;
+  }
 
 .search-input {
     width: 200px;
@@ -86,6 +89,7 @@
     font-weight: 500;
     cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease;
+    
 }
 .search-button:hover {
     background-color: #85888c;
@@ -199,7 +203,7 @@
 }
 
 /* Для iPhone 13 Mini (ширина экрана 375px) */
-@media (max-width: 375px) {
+@media (max-width: 375px), (max-width: 768px), (max-width: 320px), (max-width: 828px)  {
     .header-title {
         font-size: 24px;
     }
@@ -261,44 +265,72 @@
         padding: 9px;
     }
 
-    .order-info {
-        margin-top: 0px;
+    .breadcrumb-controls {
+        max-height: 50px; /* Adjust this value as needed */
+        overflow-y: auto; /* Add scroll if the content exceeds max-height */
+        padding: 5px; /* Optional: reduce padding for smaller screens */
     }
+    
 
     .current-order-button {
-        font-size: 20px;
-        padding: 5px 5px;
+        font-size: 14px; /* Smaller font size */
+        padding: 5px 8px; /* Adjust padding for smaller size */
+        transform: scale(0.9); /* Scale down slightly */
+        max-height: 40px; /* Limit the height */
+        overflow: hidden; /* Ensures no overflow if content exceeds max-height */
+    }
+    .service-info {
+        flex-direction: column; /* Изображение и текст размещаются по вертикали */
+        align-items: center; /* Центрируем содержимое */
     }
 
-}
-
-/* Для экранов с шириной до 320px (старые устройства) */
-@media (max-width: 320px) {
-    .header-title {
-        font-size: 20px; /* Уменьшаем заголовок */
+    .service-detail-image {
+        margin: 0 auto; /* Центрируем изображение */
     }
 
-    .search-form {
-        width: 90%;
+    .burger-menu {
+        display: block; /* Показываем бургер-меню */
     }
 
-    .card {
-        padding: 6px;
+    .nav-links {
+        display: none; /* Скрываем меню по умолчанию */
+        animation: slide-in 0.3s ease; /* Анимация появления */
+    }
+
+    .nav-links.active {
+        display: flex; /* Показываем меню */
+        position: absolute;
+        top: 50px; /* Корректируем позицию */
+        left: 0;
         width: 100%;
     }
 
-    .price {
-        font-size: 12px;
+    .nav-link {
+        font-size: 16px; /* Уменьшаем размер шрифта для мобильного */
+        padding: 12px 15px; /* Уменьшаем отступы */
     }
 
-    .card-button {
-        padding: 6px 10px;
+    /* Бургер-меню: адаптированное для маленького экрана */
+    .burger-menu {
+        width: 28px; /* Оптимальный размер бургер-меню */
+        height: 22px;
     }
 
-    .card-title {
-        font-size: 16px;
+    .burger-line {
+        height: 4px; /* Уменьшаем высоту полоски */
+    }
+
+    .burger-menu.active .burger-line:nth-child(1),
+    .burger-menu.active .burger-line:nth-child(3) {
+        width: 100%;
+        background-color: #f8b400; /* Яркий акцент */
+    }
+
+    .burger-menu.active .burger-line:nth-child(2) {
+        opacity: 0;
     }
 }
+
 
 .background-block {
     background-color: #ffffff;
@@ -324,36 +356,37 @@
 .service-title {
     color: #000000;
     text-align: center; /* Выравниваем заголовок по центру */
-    margin-top: 20px;
+    
 }
 
 .service-info {
-    display: flex; /* Используем Flexbox для размещения изображения и текста */
-    align-items: flex-start; /* Выравниваем по верхнему краю */
-    width: 100%; /* Ширина 100% для адаптивности */
-    
+    display: flex;
+    align-items: flex-end; /* Размещаем элементы внизу */
+    justify-content: flex-start; /* Размещаем элементы слева */
+    gap: 20px; /* Расстояние между картинкой и текстом */
+    position: relative;
 }
 
 .service-text {
     flex: 1; /* Позволяет тексту занимать доступное пространство */
     color: #000000;
-    margin-right: 20px; /* Отступ между текстом и изображением */
-    margin-top: 350px; /* Добавляем отступ сверху, чтобы опустить текст ниже изображения */
+     /* Отступ между текстом и изображением */
+    margin-top: 20px; /* Добавляем отступ сверху, чтобы опустить текст ниже изображения */
     white-space: nowrap;
 }
 
 .service-details {
     list-style-type: none;
     padding: 0;
-    margin-bottom: 20px;
+    
 }
 
 .service-detail-image {
-    max-width: 110%; /* Делает изображение адаптивным */
-    height: auto; /* Высота автоматически подстраивается под ширину */
-    border-radius: 10px;
-    display: block;
-    margin: 0 auto; /* Центрируем изображение, если нужно */
+    width: 100%;
+    max-width: 400px; /* Максимальная ширина изображения */
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 
@@ -378,12 +411,7 @@
 body {
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* Обеспечивает использование всей высоты экрана */
-    margin: 0; /* Убираем стандартные отступы */
-    justify-content: flex-start; /* Центрируем содержимое по вертикали */
-    align-items: center;
-    text-align: center;
-    overflow: auto; /* Разрешаем прокрутку, если контент не помещается */
+    min-height: 100vh;
 }
 .nav-link {
     text-decoration: none; /* Remove underline */
@@ -410,10 +438,9 @@ body {
 /* src/components/Breadcrumb.css */
 
 .breadcrumb {
-    margin: 16px 0;
-    font-size: 14px;
-    
-    
+    position: relative;
+    z-index: 1010; /* Убедимся, что хлебные крошки будут поверх панели навигации */
+    margin-top: 60px; /* Отступ сверху, чтобы хлебные крошки не перекрывались панелью */
 }
 
 .breadcrumb-link {
@@ -427,10 +454,9 @@ body {
 }
 .breadcrumb-controls {
     display: flex;
+    justify-content: space-between; /* Ensures the form and the order info are spaced out */
     align-items: center;
-    margin-left: auto; /* Отодвигает фильтр и кнопку корзины вправо */
-    margin-top: 0px;
-}
+  }
 .order-info {
     display: flex;
     align-items: center;
@@ -440,6 +466,98 @@ body {
     width: 100%;
     padding: 20px;
     max-height: 300px;
+    margin-top: 30px;
     
   }
   
+
+
+
+
+/* Бургер-меню */
+.burger-menu {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px; /* Увеличиваем ширину для более выразительного вида */
+    height: 25px; /* Увеличиваем высоту */
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out; /* Плавный переход при изменении */
+    position: relative;
+}
+
+/* Полоски бургер-меню */
+.burger-line {
+    width: 100%;
+    height: 5px; /* Увеличиваем высоту полоски для более заметного эффекта */
+    background-color: #333; /* Цвет полоски */
+    border-radius: 5px; /* Округлые края для полосок */
+    transition: transform 0.3s ease, opacity 0.3s ease; /* Плавное изменение */
+}
+
+/* Стили для активного состояния бургер-меню */
+.burger-menu.active .burger-line:nth-child(1) {
+    transform: rotate(45deg); /* Первая полоска — угол поворота */
+    transform-origin: 50% 50%; /* Центрируем поворот */
+    background-color: #3faf4a; /* Изменение цвета */
+}
+
+.burger-menu.active .burger-line:nth-child(2) {
+    opacity: 0; /* Скрываем центральную полоску */
+}
+
+.burger-menu.active .burger-line:nth-child(3) {
+    transform: rotate(-45deg); /* Третья полоска — угол поворота */
+    transform-origin: 50% 50%; /* Центрируем поворот */
+    background-color: #3faf4a; /* Изменение цвета */
+}
+
+/* Навигационные ссылки */
+.nav-links {
+    display: none;
+    flex-direction: column;
+    background-color: #111; /* Темный фон */
+    padding: 15px 20px;
+    border-radius: 5px; /* Округление углов */
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Легкая тень */
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Показываем меню, когда оно активно */
+.nav-links.active {
+    display: flex;
+    transform: translateY(0); /* Плавное появление */
+    opacity: 1;
+}
+
+/* Стили для ссылок меню */
+.nav-link {
+    color: #fff;
+    padding: 15px 20px;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 500;
+    transition: background-color 0.3s ease; /* Плавный переход фона */
+}
+
+.nav-link:hover {
+    background-color: #3faf4a; /* Цвет при наведении */
+    border-radius: 5px;
+}
+
+/* Анимация появления меню */
+@keyframes slide-in {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+

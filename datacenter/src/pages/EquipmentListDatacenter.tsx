@@ -15,45 +15,45 @@ export interface DatacenterService {
 export const mockData: DatacenterService[] = [
     {
         id: 1,
-        name: 'Моковый сервер',
-        description: 'Моковые данные для тестирования',
+        name: 'Коммутатор BROCADE G610',
+        description: 'Поддержка до 24 портов, высокая производительность, возможность объединения в стеки.',
         image_url: null,
-        price: 10000,
+        price: 815400,
     },
     {
         id: 2,
-        name: 'Виртуальный сервер',
-        description: 'Еще один сервер с мок-данными',
+        name: 'Сервер DELL R650 10SFF',
+        description: 'Процессоры Intel Xeon Scalable, до 1.5 ТБ оперативной памяти, поддержка NVMe.',
         image_url: null,
-        price: 15000,
+        price: 515905,
     },
     {
         id: 3,
-        name: 'Виртуальный сервер',
-        description: 'Еще один сервер с мок-данными',
+        name: 'СХД DELL PowerVault MD1400 External SAS 12 Bays',
+        description: 'До 12 дисков, интерфейс SAS 12 Гбит/с, высокая отказоустойчивость.',
         image_url: null,
-        price: 15000,
+        price: 124800,
     },
     {
         id: 4,
-        name: 'Виртуальный сервер',
-        description: 'Еще один сервер с мок-данными',
+        name: 'Конфигуратор Dell R250',
+        description: 'Поддержка до 10 ядер, до 2 ТБ памяти DDR4, компактный корпус.',
         image_url: null,
-        price: 15000,
+        price: 166372,
     },
     {
         id: 5,
-        name: 'Виртуальный сервер',
-        description: 'Еще один сервер с мок-данными',
+        name: 'Серверный Настенный шкаф 15U',
+        description: '15 юнитов, высококачественная сталь, возможность установки на стену.',
         image_url: null,
-        price: 15000,
+        price: 326590,
     },
     {
         id: 6,
-        name: 'Виртуальный сервер',
-        description: 'Еще один сервер с мок-данными',
+        name: 'Патч-корд iOpen ANP612B-BK-50M',
+        description: 'Длина 50 м, оболочка из ПВХ, защита от помех.',
         image_url: null,
-        price: 15000,
+        price: 5199,
     },
    
 ];
@@ -115,17 +115,18 @@ const EquipmentListDatacenter: React.FC = () => {
     return (
         <>
             <nav className="navigation-bar mb-0">
-
                 <Link to="/" className="header-title">Data Center</Link>
-                <div className={`nav-links ${menuActive ? 'active' : ''}`}>
-                    <Link to="/datacenter-services/" className="nav-link">Список товаров</Link>
-                </div>
-
-                {/* Бургер-иконка */}
+                
+                {/* Бургер-меню */}
                 <div className={`burger-menu ${menuActive ? 'active' : ''}`} onClick={toggleMenu}>
                     <div className="burger-line"></div>
                     <div className="burger-line"></div>
                     <div className="burger-line"></div>
+                </div>
+
+                {/* Ссылки меню, скрытые по умолчанию */}
+                <div className={`nav-links ${menuActive ? 'active' : ''}`}>
+                    <Link to="/datacenter-services/" className="nav-link">Список товаров</Link>
                 </div>
             </nav>
 
@@ -133,34 +134,34 @@ const EquipmentListDatacenter: React.FC = () => {
         <Breadcrumb items={breadcrumbItems} />
 
         <div className="breadcrumb-controls">
-          {/* Форма поиска */}
-          <Form className="search-form d-flex flex-column" onSubmit={handleSearch}>
-            <Form.Control
-              type="number"
-              placeholder="Минимальная цена..."
-              value={minPrice}
-              onChange={handlePriceChange(setMinPrice)}
-              min="0"
-              className="search-input"
-            />
-            <Form.Control
-              type="number"
-              placeholder="Максимальная цена..."
-              value={maxPrice}
-              onChange={handlePriceChange(setMaxPrice)}
-              min="0"
-              className="search-input"
-            />
-            <Button variant="primary" type="submit" className="search-button" disabled={loading}>
-              {loading ? <Spinner animation="border" size="sm" /> : 'Поиск'}
-            </Button>
-          </Form>
+  {/* Форма поиска */}
+  <Form className="search-form d-flex" onSubmit={handleSearch}>
+    <Form.Control
+      type="number"
+      placeholder="Минимальная цена..."
+      value={minPrice}
+      onChange={handlePriceChange(setMinPrice)}
+      min="0"
+      className="search-input"
+    />
+    <Form.Control
+      type="number"
+      placeholder="Максимальная цена..."
+      value={maxPrice}
+      onChange={handlePriceChange(setMaxPrice)}
+      min="0"
+      className="search-input"
+    />
+    <Button variant="primary" type="submit" className="search-button" disabled={loading}>
+      {loading ? <Spinner animation="border" size="sm" /> : 'Поиск'}
+    </Button>
+  </Form>
 
-          {/* Кнопка корзины */}
-          <div className="order-info">
-            <span className="current-order-button disabled">Текущий заказ недоступен</span>
-          </div>
-        </div>
+  {/* Кнопка корзины */}
+  <div className="order-info">
+    <span className="current-order-button disabled">Текущий заказ недоступен</span>
+  </div>
+</div>
       </div>
 
         <Container className="space">

@@ -10,7 +10,14 @@ self.addEventListener('install', (event) => {
           '/index.html',              // Индексный HTML
           '/manifest.json',           // Манифест
           '/logo192.png',             // Логотип
-          '/logo512.png',             // Логотип
+          '/logo512.png',
+          '/images/default.png',
+          '/images/1.png',
+          '/images/2.png',
+          '/images/3.png',
+          '/images/4.png',
+          '/images/5.png',
+          '/images/6.png',             // Логотип
           '/src/main.tsx',            // Главный JS файл
           '/src/index.css',           // CSS файл
           // Добавьте другие файлы, которые нужно кешировать для оффлайн-режима

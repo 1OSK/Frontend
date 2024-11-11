@@ -11,13 +11,7 @@ self.addEventListener('install', (event) => {
           './manifest.json',               
           './logo192.png',                 
           './logo512.png',
-          './images/default.png',
-          './images/1.png',
-          './images/2.png',
-          './images/3.png',
-          './images/4.png',
-          './images/5.png',
-          './images/6.png',
+          
           './src/main.tsx',                
           './src/index.css', 
           // Добавьте другие файлы, которые нужно кешировать для оффлайн-режима

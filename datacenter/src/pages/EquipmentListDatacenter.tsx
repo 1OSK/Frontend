@@ -6,37 +6,45 @@ import { Link } from 'react-router-dom';
 import Breadcrumb from '../components/Breadcrumb';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
-import { setServices, setLoading, setError } from '../slices/dataSlice';
+import { setServices, setLoading, setError, setMinPrice, setMaxPrice } from '../slices/dataSlice';
 
 export const EquipmentListDatacenter: React.FC = () => {
   const dispatch = useDispatch();
   const services = useSelector((state: RootState) => state.ourData.services);
   const loading = useSelector((state: RootState) => state.ourData.loading);
   const error = useSelector((state: RootState) => state.ourData.error);
-  const [minPrice, setMinPrice] = useState<number | ''>('');
-  const [maxPrice, setMaxPrice] = useState<number | ''>('');
+  const minPrice = useSelector((state: RootState) => state.ourData.minPrice);
+  const maxPrice = useSelector((state: RootState) => state.ourData.maxPrice);
   const [menuActive, setMenuActive] = useState(false);
 
-  const defaultImageUrl = 'http://127.0.0.1:9000/something/default.png';
+  const defaultImageUrl = '/images/default.png';
 
   const breadcrumbItems = [
     { label: 'Главная', path: '/' },
     { label: 'Список товаров', path: '/datacenter-services' },
   ];
 
+  // Загружаем значения фильтров из localStorage при монтировании
   useEffect(() => {
+    const storedMinPrice = localStorage.getItem('minPrice');
+    const storedMaxPrice = localStorage.getItem('maxPrice');
+    
+    if (storedMinPrice) dispatch(setMinPrice(storedMinPrice));
+    if (storedMaxPrice) dispatch(setMaxPrice(storedMaxPrice));
+
     fetchServices();
   }, []);
 
+  // Функция для получения данных с фильтрами
   const fetchServices = async () => {
     dispatch(setLoading(true));
     dispatch(setError(null));
-  
+
     let url = '/datacenter-services/';
     if (minPrice !== '' || maxPrice !== '') {
       url += `?datacenter_min_price=${minPrice}&datacenter_max_price=${maxPrice}`;
     }
-  
+
     try {
       const response = await fetch(url);
       if (!response.ok) throw new Error('Ошибка при загрузке данных');
@@ -44,19 +52,29 @@ export const EquipmentListDatacenter: React.FC = () => {
       dispatch(setServices(data.datacenters)); // Обновляем данные в Redux
     } catch (err) {
       dispatch(setError('Ошибка при загрузке данных'));
-      // Use services directly from Redux state, no mock data needed
     } finally {
       dispatch(setLoading(false));
     }
   };
 
+  // Обработчик отправки формы
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    fetchServices(); // вызываем fetchServices с фильтром
+    fetchServices(); // вызываем fetchServices с текущими значениями фильтров
   };
 
-  const handlePriceChange = (setter: React.Dispatch<React.SetStateAction<number | ''>>) =>
-    (e: React.ChangeEvent<HTMLInputElement>) => setter(e.target.value ? Number(e.target.value) : '');
+  // Обработчик изменения значений в полях фильтров
+  const handleMinPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    dispatch(setMinPrice(value));
+    localStorage.setItem('minPrice', value); // Сохраняем значение в localStorage
+  };
+
+  const handleMaxPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    dispatch(setMaxPrice(value));
+    localStorage.setItem('maxPrice', value); // Сохраняем значение в localStorage
+  };
 
   const toggleMenu = () => {
     setMenuActive(!menuActive);
@@ -85,7 +103,7 @@ export const EquipmentListDatacenter: React.FC = () => {
               type="number"
               placeholder="Минимальная цена..."
               value={minPrice}
-              onChange={handlePriceChange(setMinPrice)}
+              onChange={handleMinPriceChange}
               min="0"
               className="search-input"
             />
@@ -93,7 +111,7 @@ export const EquipmentListDatacenter: React.FC = () => {
               type="number"
               placeholder="Максимальная цена..."
               value={maxPrice}
-              onChange={handlePriceChange(setMaxPrice)}
+              onChange={handleMaxPriceChange}
               min="0"
               className="search-input"
             />
@@ -101,10 +119,10 @@ export const EquipmentListDatacenter: React.FC = () => {
               {loading ? <Spinner animation="border" size="sm" /> : 'Поиск'}
             </Button>
           </Form>
-           {/* Кнопка корзины */}
-            <div className="order-info">
-                <span className="current-order-button disabled">Текущий заказ недоступен</span>
-            </div>
+          {/* Кнопка корзины */}
+          <div className="order-info">
+            <span className="current-order-button disabled">Текущий заказ недоступен</span>
+          </div>
         </div>
       </div>
 
@@ -119,10 +137,10 @@ export const EquipmentListDatacenter: React.FC = () => {
                   <p className="title">{service.name}</p>
                 </Link>
                 <div className="image-container">
-                  <img
-                    src={service.image_url || defaultImageUrl}
-                    alt={service.name}
-                    className="service-image"
+                  <img 
+                    src={service.image_url || defaultImageUrl} 
+                    alt={service.name} 
+                    className="service-image" 
                   />
                 </div>
                 <div className="card-price-button-container" style={{ marginTop: 'auto' }}>

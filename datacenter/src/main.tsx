@@ -53,13 +53,12 @@ const router = createBrowserRouter(
   }
 );
 
-// Регистрация сервис-воркера
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker
-      .register('/serviceWorker.js') // Путь к сервис-воркеру
+      .register('./serviceWorker.js')  // Это путь к файлу в папке public
       .then((registration) => {
-        console.log('Сервис-воркер зарегистрирован:', registration);
+        console.log('ServiceWorker зарегистрирован', registration);
       })
       .catch((error) => {
         console.log('Ошибка регистрации сервис-воркера:', error);

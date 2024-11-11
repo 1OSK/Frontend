@@ -6,6 +6,8 @@ import './index.css';
 import EquipmentListDatacenter from './pages/EquipmentListDatacenter';
 import EquipmentDetailDatacenter from './pages/EquipmentDetailDatacenter';
 import HomeDatacenter from './pages/HomeDatacenter';
+import { Provider } from 'react-redux'; 
+import store from './store';  // Импортируем store
 
 // Проверка, работает ли приложение на GitHub Pages
 const isGitHubPages = window.location.hostname === '1osk.github.io'; 
@@ -68,6 +70,8 @@ if ('serviceWorker' in navigator) {
 // Рендерим приложение
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store}> {/* Оборачиваем RouterProvider в Provider */}
+      <RouterProvider router={router} />
+    </Provider>
   </React.StrictMode>
 );

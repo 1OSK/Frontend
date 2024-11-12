@@ -17,7 +17,7 @@ export const EquipmentListDatacenter: React.FC = () => {
   const maxPrice = useSelector((state: RootState) => state.ourData.maxPrice);
   const [menuActive, setMenuActive] = useState(false);
 
-  const defaultImageUrl = '/images/default.png';
+  const defaultImageUrl = 'https://1osk.github.io/Frontend/images/2.png';
 
   const breadcrumbItems = [
     { label: 'Главная', path: '/' },
@@ -137,11 +137,7 @@ export const EquipmentListDatacenter: React.FC = () => {
                   <p className="title">{service.name}</p>
                 </Link>
                 <div className="image-container">
-                  <img 
-                    src={service.image_url || defaultImageUrl} 
-                    alt={service.name} 
-                    className="service-image" 
-                  />
+                <img src={service.image_url || defaultImageUrl} alt={service.name} className="service-image" />
                 </div>
                 <div className="card-price-button-container" style={{ marginTop: 'auto' }}>
                   {service.price && <p className="price">{service.price} руб.</p>}

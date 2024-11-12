@@ -74,26 +74,26 @@ const EquipmentDetailDatacenter = () => {
 
       <div className="background-block" style={{ paddingTop: '10px' }}>
         <div className="service-detail-container">
-          <h1 className="service-title">{equipment.name}</h1>
-          <div className="service-info">
-            <div className="service-text">
-              <ul className="service-details">
-                {equipment.description ? (
-                  equipment.description.split(',').map((item, index) => (
-                    <li key={index}>• {item.trim()}</li>
-                  ))
-                ) : (
-                  <li>Информация о деталях недоступна.</li>
-                )}
-              </ul>
-              <p className="price"><strong>Цена:</strong> {equipment.price} руб.</p>
-            </div>
+        <h1 className="service-title">{equipment.name}</h1>
+            <div className="service-info">
             <img 
-              src={equipment.image_url || "http://127.0.0.1:9000/something/default.png"} 
-              alt={equipment.name} 
-              className="service-detail-image" 
+                src={equipment.image_url || "http://127.0.0.1:9000/something/default.png"} 
+                alt={equipment.name} 
+                className="service-detail-image" 
             />
-          </div>
+            <div className="service-text">
+                <ul className="service-details">
+                {equipment.description ? (
+                    equipment.description.split(',').map((item, index) => (
+                    <li key={index}>• {item.trim()}</li>
+                    ))
+                ) : (
+                    <li>Информация о деталях недоступна.</li>
+                )}
+                </ul>
+                <p className="price"><strong>Цена:</strong> {equipment.price} руб.</p>
+            </div>
+            </div>
         </div>
       </div>
     </>

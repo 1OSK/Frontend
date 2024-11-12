@@ -6,14 +6,20 @@ self.addEventListener('install', (event) => {
     event.waitUntil(
       caches.open('my-cache-v1').then((cache) => {
         return cache.addAll([
-          './',                            // Используйте относительные пути
-          './index.html',                  
-          './manifest.json',               
-          './logo192.png',                 
-          './logo512.png',
-          
-          './src/main.tsx',                
-          './src/index.css', 
+          './',                        // Главная страница
+          './index.html',              // Индексный HTML
+          './manifest.json',           // Манифест
+          './logo192.png',             // Логотип
+          './images/1.png',
+          './images/2.png',
+          './images/3.png',
+          './images/4.png',
+          './images/5.png',
+          './images/6.png',
+          './images/default.png',
+          './logo512.png',             // Логотип
+          './src/main.tsx',            // Главный JS файл
+          './src/index.css',           // CSS файл
           // Добавьте другие файлы, которые нужно кешировать для оффлайн-режима
         ]);
       })

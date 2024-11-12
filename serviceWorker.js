@@ -10,6 +10,7 @@ self.addEventListener('install', (event) => {
           './index.html',              // Индексный HTML
           './manifest.json',           // Манифест
           './logo192.png',             // Логотип
+          './images/1.png',
           './logo512.png',             // Логотип
           './src/main.tsx',            // Главный JS файл
           './src/index.css',           // CSS файл

@@ -6,16 +6,19 @@ import { Link } from 'react-router-dom';
 import Breadcrumb from '../components/Breadcrumb';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
-import { setServices, setLoading, setError, setMinPrice, setMaxPrice } from '../slices/dataSlice';
+import { setMinPrice, setMaxPrice } from '../slices/dataSlice';
+import { mockData } from '../mock/mockData';
+import Navbar from '../components/Navbar'; 
 
 export const EquipmentListDatacenter: React.FC = () => {
   const dispatch = useDispatch();
-  const services = useSelector((state: RootState) => state.ourData.services);
-  const loading = useSelector((state: RootState) => state.ourData.loading);
-  const error = useSelector((state: RootState) => state.ourData.error);
   const minPrice = useSelector((state: RootState) => state.ourData.minPrice);
   const maxPrice = useSelector((state: RootState) => state.ourData.maxPrice);
-  const [menuActive, setMenuActive] = useState(false);
+
+  const [services, setServices] = useState(mockData);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
 
   const defaultImageUrl = 'https://1osk.github.io/Frontend/images/2.png';
 
@@ -24,7 +27,6 @@ export const EquipmentListDatacenter: React.FC = () => {
     { label: 'Список товаров', path: '/datacenter-services' },
   ];
 
-  // Загружаем значения фильтров из localStorage при монтировании
   useEffect(() => {
     const storedMinPrice = localStorage.getItem('minPrice');
     const storedMaxPrice = localStorage.getItem('maxPrice');
@@ -35,13 +37,12 @@ export const EquipmentListDatacenter: React.FC = () => {
     fetchServices();
   }, []);
 
-  // Функция для получения данных с фильтрами
   const fetchServices = async () => {
-    dispatch(setLoading(true));
-    dispatch(setError(null));
+    setLoading(true);
+    setError(null);
 
     let url = '/datacenter-services/';
-    if (minPrice !== '' || maxPrice !== '') {
+    if (minPrice || maxPrice) {
       url += `?datacenter_min_price=${minPrice}&datacenter_max_price=${maxPrice}`;
     }
 
@@ -49,72 +50,49 @@ export const EquipmentListDatacenter: React.FC = () => {
       const response = await fetch(url);
       if (!response.ok) throw new Error('Ошибка при загрузке данных');
       const data = await response.json();
-      dispatch(setServices(data.datacenters)); // Обновляем данные в Redux
+      setServices(data.datacenters);
     } catch (err) {
-      dispatch(setError('Ошибка при загрузке данных'));
+      setError('Ошибка при загрузке данных');
     } finally {
-      dispatch(setLoading(false));
+      setLoading(false);
     }
   };
 
-  // Обработчик отправки формы
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    fetchServices(); // вызываем fetchServices с текущими значениями фильтров
+    fetchServices();
   };
 
-  // Обработчик изменения значений в полях фильтров
-  const handleMinPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    dispatch(setMinPrice(value));
-    localStorage.setItem('minPrice', value); // Сохраняем значение в localStorage
-  };
 
-  const handleMaxPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    dispatch(setMaxPrice(value));
-    localStorage.setItem('maxPrice', value); // Сохраняем значение в localStorage
-  };
 
-  const toggleMenu = () => {
-    setMenuActive(!menuActive);
-  };
+
 
   return (
     <>
-      <nav className="navigation-bar mb-0">
-        <Link to="/" className="header-title">Data Center</Link>
-        <div className={`burger-menu ${menuActive ? 'active' : ''}`} onClick={toggleMenu}>
-          <div className="burger-line"></div>
-          <div className="burger-line"></div>
-          <div className="burger-line"></div>
-        </div>
-        <div className={`nav-links ${menuActive ? 'active' : ''}`}>
-          <Link to="/datacenter-services/" className="nav-link">Список товаров</Link>
-        </div>
-      </nav>
+      <Navbar />
 
       <div className="breadcrumb-container">
         <Breadcrumb items={breadcrumbItems} />
 
         <div className="breadcrumb-controls">
           <Form className="search-form d-flex" onSubmit={handleSearch}>
-            <Form.Control
-              type="number"
-              placeholder="Минимальная цена..."
-              value={minPrice}
-              onChange={handleMinPriceChange}
-              min="0"
-              className="search-input"
-            />
-            <Form.Control
-              type="number"
-              placeholder="Максимальная цена..."
-              value={maxPrice}
-              onChange={handleMaxPriceChange}
-              min="0"
-              className="search-input"
-            />
+          <Form.Control
+            type="number"
+            placeholder="Минимальная цена..."
+            value={minPrice}
+            onChange={(e) => dispatch(setMinPrice(e.target.value))} 
+            min="0"
+            className="search-input"
+          />
+
+          <Form.Control
+            type="number"
+            placeholder="Максимальная цена..."
+            value={maxPrice}
+            onChange={(e) => dispatch(setMaxPrice(e.target.value))}
+            min="0"
+            className="search-input"
+          />
             <Button variant="primary" type="submit" className="search-button" disabled={loading}>
               {loading ? <Spinner animation="border" size="sm" /> : 'Поиск'}
             </Button>

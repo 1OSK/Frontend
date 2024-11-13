@@ -1,53 +1,49 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../assets/style.css';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../store'; // Импортируем тип RootState
-import { setSelectedService, setLoading, setError } from '../slices/dataSlice'; // действия для Redux
+
+import { mockData } from '../mock/mockData';
 import Breadcrumb from '../components/Breadcrumb';
-import { mockData } from '../slices/dataSlice'; // Моковые данные из Redux
+import Navbar from '../components/Navbar'; 
 
 const EquipmentDetailDatacenter = () => {
   const { id } = useParams<{ id: string }>();
-  const dispatch = useDispatch();
-  
-  // Используем состояние из Redux
-  const equipment = useSelector((state: RootState) => state.ourData.selectedService);
-  const loading = useSelector((state: RootState) => state.ourData.loading);
-  const error = useSelector((state: RootState) => state.ourData.error);
 
-  // Эффект для загрузки данных
+  const [equipment, setEquipment] = useState<any | null>(null); // Для выбранного оборудования
+  const [loading, setLoading] = useState(false); // Состояние загрузки
+  const [error, setError] = useState<string | null>(null); // Состояние ошибки
+
   useEffect(() => {
     const fetchEquipment = async () => {
-      dispatch(setLoading(true)); // Устанавливаем состояние загрузки
-      dispatch(setError(null)); // Сбрасываем ошибки
+      setLoading(true); // Устанавливаем состояние загрузки
+      setError(null); // Сбрасываем ошибки
 
       try {
         const response = await fetch(`/datacenter-services/${id}/`);
         if (!response.ok) throw new Error(`Ошибка загрузки данных: ${response.statusText}`);
-        
+
         const data = await response.json();
-        dispatch(setSelectedService(data)); // Обновляем данные в Redux
-        dispatch(setError(null)); // Сбрасываем ошибку
+        setEquipment(data); // Устанавливаем полученные данные в локальное состояние
+        setError(null); // Сбрасываем ошибку
       } catch (err) {
         console.error('Ошибка запроса:', err);
-        
+
         // Проверяем наличие моковых данных
         const mockItem = mockData.find(item => item.id === Number(id));
         if (mockItem) {
-          dispatch(setSelectedService(mockItem)); // Используем моковые данные
-          dispatch(setError(null)); // Сбрасываем ошибку
+          setEquipment(mockItem); // Используем моковые данные
+          setError(null); // Сбрасываем ошибку
         } else {
-          dispatch(setError('Комплектующее не найдено в моковых данных.'));
+          setError('Комплектующее не найдено в моковых данных.'); // Ошибка, если моковых данных нет
         }
       } finally {
-        dispatch(setLoading(false)); // Завершаем загрузку
+        setLoading(false); // Завершаем загрузку
       }
     };
 
     fetchEquipment();
-  }, [id, dispatch]);
+  }, [id]); // Вставляем только id, так как dispatch здесь не используется
 
   // Рендерим состояние загрузки или ошибки
   if (loading) return <div>Загрузка...</div>;
@@ -61,14 +57,12 @@ const EquipmentDetailDatacenter = () => {
     { label: equipment.name, path: '#' },
   ];
 
+
+
+
   return (
     <>
-      <nav className="navigation-bar">
-        <Link to="/" className="header-title">Data Center</Link>
-        <div className="nav-links">
-          <Link to="/datacenter-services/" className="nav-link">Список товаров</Link>
-        </div>
-      </nav>
+      <Navbar />
 
       <Breadcrumb items={breadcrumbItems} />
 
@@ -84,7 +78,7 @@ const EquipmentDetailDatacenter = () => {
             <div className="service-text">
                 <ul className="service-details">
                 {equipment.description ? (
-                    equipment.description.split(',').map((item, index) => (
+                    equipment.description.split(',').map((item: string, index: number) => (
                     <li key={index}>• {item.trim()}</li>
                     ))
                 ) : (

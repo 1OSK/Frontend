@@ -7,9 +7,8 @@ import EquipmentListDatacenter from './pages/EquipmentListDatacenter';
 import EquipmentDetailDatacenter from './pages/EquipmentDetailDatacenter';
 import HomeDatacenter from './pages/HomeDatacenter';
 import { Provider } from 'react-redux'; 
-import store from './store';  // Импортируем store
+import store from './store';  
 
-// Проверка, работает ли приложение на GitHub Pages
 const isGitHubPages = window.location.hostname === '1osk.github.io'; 
 
 interface BreadcrumbProps {
@@ -24,7 +23,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ items }) => {
                   <Link to={item.path} className="breadcrumb-link">
                       {item.label}
                   </Link>
-                  {index < items.length - 1 && <span> &gt; </span>} {/* Separator */}
+                  {index < items.length - 1 && <span> &gt; </span>} 
               </span>
           ))}
       </nav>
@@ -44,19 +43,19 @@ const router = createBrowserRouter(
       element: <EquipmentListDatacenter />,
     },
     {
-      path: '/datacenter-services/:id', // Динамический маршрут для деталей оборудования
+      path: '/datacenter-services/:id', 
       element: <EquipmentDetailDatacenter />,
     },
   ],
   {
-    basename: isGitHubPages ? '/Frontend' : '', // Настройка basename для GitHub Pages
+    basename: isGitHubPages ? '/Frontend' : '', 
   }
 );
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker
-      .register('./serviceWorker.js')  // Это путь к файлу в папке public
+      .register('./serviceWorker.js')  
       .then((registration) => {
         console.log('ServiceWorker зарегистрирован', registration);
       })
@@ -66,10 +65,9 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-// Рендерим приложение
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <Provider store={store}> {/* Оборачиваем RouterProvider в Provider */}
+    <Provider store={store}> 
       <RouterProvider router={router} />
     </Provider>
   </React.StrictMode>

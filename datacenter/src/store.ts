@@ -3,11 +3,11 @@ import dataReducer from './slices/dataSlice';
 
 const store = configureStore({
   reducer: {
-    ourData: dataReducer,  // Подключаем редьюсер
+    ourData: dataReducer,
   },
 });
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
-export default store;
+export default store;  // Экспорт по умолчанию

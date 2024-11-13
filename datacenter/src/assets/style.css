@@ -212,7 +212,16 @@
     .search-form {
         width: 90%;
     }
-
+    .search-input::placeholder {
+        font-size: 10px; /* размер шрифта для текста в placeholder */
+        color: #6c757d; /* цвет placeholder */
+    }
+    .search-button {
+        font-size: 20px; /* Размер шрифта для текста кнопки */
+        padding: 10px 20px; /* Отступы внутри кнопки */
+        border-radius: 4px; /* Скругленные углы */
+        text-transform: uppercase; /* Преобразование текста в верхний регистр */
+      }
     /* Уменьшаем ширину полей ввода */
     .search-input {
         width: 100%;

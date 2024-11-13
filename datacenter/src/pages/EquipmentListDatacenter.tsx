@@ -105,32 +105,32 @@ export const EquipmentListDatacenter: React.FC = () => {
       </div>
 
       <Container className="space">
-        {loading && <Spinner animation="border" />}
-        {error && <Alert variant="danger">{error}</Alert>}
-        <Row>
-          {services.map(service => (
-            <Col key={service.id} md={4} className="mb-4">
-              <div className="card">
-                <Link to={`/datacenter-services/${service.id}/`} className="card-title">
-                  <p className="title">{service.name}</p>
-                </Link>
-                <div className="image-container">
-                <img src={service.image_url || defaultImageUrl} alt={service.name} className="service-image" />
-                </div>
-                <div className="card-price-button-container" style={{ marginTop: 'auto' }}>
-                  {service.price && <p className="price">{service.price} руб.</p>}
-                  <div className="button-container">
-                    <Link to={`/datacenter-services/${service.id}/`} className="card-button">Подробнее о комплектующем</Link>
-                    <div className="add-button-container">
-                      <Button variant="secondary" disabled className="card-button disabled">Добавить в заказ</Button>
-                    </div>
-                  </div>
-                </div>
+  {loading && <Spinner animation="border" />}
+  {error && <Alert variant="danger">{error}</Alert>}
+  <Row>
+    {services.map(service => (
+      <Col key={service.id} xs={12} sm={6} md={5} lg={4} className="mb-4">
+        <div className="card">
+          <Link to={`/datacenter-services/${service.id}/`} className="card-title">
+            <p className="title">{service.name}</p>
+          </Link>
+          <div className="image-container">
+            <img src={service.image_url || defaultImageUrl} alt={service.name} className="service-image" />
+          </div>
+          <div className="card-price-button-container" style={{ marginTop: 'auto' }}>
+            {service.price && <p className="price">{service.price} руб.</p>}
+            <div className="button-container">
+              <Link to={`/datacenter-services/${service.id}/`} className="card-button">Подробнее о комплектующем</Link>
+              <div className="add-button-container">
+                <Button variant="secondary" disabled className="card-button disabled">Добавить в заказ</Button>
               </div>
-            </Col>
-          ))}
-        </Row>
-      </Container>
+            </div>
+          </div>
+        </div>
+      </Col>
+    ))}
+  </Row>
+</Container>
     </>
   );
 };

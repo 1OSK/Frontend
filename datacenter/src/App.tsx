@@ -29,6 +29,8 @@ function App() {
     if (window.__TAURI__ && window.__TAURI__.tauri) {
       const { invoke } = window.__TAURI__.tauri;
 
+
+      
       // Вызов Tauri для выполнения команды 'create'
       invoke('tauri', { cmd: 'create' })
         .then((response: any) => console.log(response))

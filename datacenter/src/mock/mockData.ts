@@ -54,9 +54,9 @@ export interface Service {
     },
     {
       id: 7,
-      name: 'Патч-корд iOpen ANP612B-BK-50M',
+      name: 'Патч-корд',
       description: 'Длина 50 м, оболочка из ПВХ, защита от помех.',
-      image_url: 'https://1osk.github.io/Frontend/images/default.png',
+      image_url: null,
       price: 5199,
     },
   ];

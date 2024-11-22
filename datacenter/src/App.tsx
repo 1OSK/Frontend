@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './store';
 import './App.css';
@@ -9,28 +9,12 @@ import HomeDatacenter from './pages/HomeDatacenter';
 import './assets/style.css'; // Убедитесь, что путь правильный
 import './index.css'; // Убедитесь, что путь правильный
 
-// Проверка, чтобы использовать правильный basename для GitHub Pages
-const isGitHubPages = window.location.hostname === '1osk.github.io';
-const basename = isGitHubPages ? '/Frontend' : ''; // Использование правильного basename для GitHub Pages
-
-// Создание маршрутов для приложения
-const router = createBrowserRouter(
-  [
-    { path: '/', element: <HomeDatacenter /> },
-    { path: '/datacenter-services', element: <EquipmentListDatacenter /> },
-    { path: '/datacenter-services/:id', element: <EquipmentDetailDatacenter /> },
-  ],
-  { basename }
-);
-
 function App() {
   useEffect(() => {
     // Проверка на существование Tauri API
     if (window.__TAURI__ && window.__TAURI__.tauri) {
       const { invoke } = window.__TAURI__.tauri;
 
-
-      
       // Вызов Tauri для выполнения команды 'create'
       invoke('tauri', { cmd: 'create' })
         .then((response: any) => console.log(response))
@@ -62,7 +46,13 @@ function App() {
 
   return (
     <Provider store={store}>
-      <RouterProvider router={router} />
+      <Router>
+        <Routes>
+          <Route path="/" element={<HomeDatacenter />} />
+          <Route path="/datacenter-services" element={<EquipmentListDatacenter />} />
+          <Route path="/datacenter-services/:id" element={<EquipmentDetailDatacenter />} />
+        </Routes>
+      </Router>
     </Provider>
   );
 }

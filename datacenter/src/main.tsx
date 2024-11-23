@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+
 import './index.css';
 import EquipmentListDatacenter from './pages/EquipmentListDatacenter';
 import EquipmentDetailDatacenter from './pages/EquipmentDetailDatacenter';
@@ -11,26 +11,7 @@ import store from './store';
 
 const isGitHubPages = window.location.hostname === '1osk.github.io'; 
 
-interface BreadcrumbProps {
-  items: { label: string; path: string }[];
-}
 
-const Breadcrumb: React.FC<BreadcrumbProps> = ({ items }) => {
-  return (
-      <nav className="breadcrumb">
-          {items.map((item, index) => (
-              <span key={index}>
-                  <Link to={item.path} className="breadcrumb-link">
-                      {item.label}
-                  </Link>
-                  {index < items.length - 1 && <span> &gt; </span>} 
-              </span>
-          ))}
-      </nav>
-  );
-};
-
-export default Breadcrumb;
 
 const router = createBrowserRouter(
   [

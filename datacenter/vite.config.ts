@@ -10,10 +10,14 @@ export default defineConfig({
       '/datacenter-services': {
         target: 'http://localhost:8000',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/datacenter-services/, '/datacenter-services'), // сохраняем путь без изменений
+        rewrite: (path) => path.replace(/^\/datacenter-services/, '/datacenter-services'),
       },
     },
   },
   plugins: [react()],
-  base: process.env.NODE_ENV === 'production' ? '/Frontend/' : '/',
+  build: {
+    outDir: 'dist', // Папка для сборки
+    assetsDir: 'assets', // Папка для статичных файлов (изображений, шрифтов)
+    sourcemap: true, // Генерация исходных карт для отладки
+  },
 });

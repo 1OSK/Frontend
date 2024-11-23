@@ -419,7 +419,7 @@ body {
 .breadcrumb {
     position: relative;
     z-index: 1010; /* Убедимся, что хлебные крошки будут поверх панели навигации */
-    margin-top: 40px; /* Отступ сверху, чтобы хлебные крошки не перекрывались панелью */
+    margin-top: 20px; /* Отступ сверху, чтобы хлебные крошки не перекрывались панелью */
 }
 
 .breadcrumb-link {
@@ -472,7 +472,7 @@ body {
 .burger-line {
     width: 100%;
     height: 5px; /* Увеличиваем высоту полоски для более заметного эффекта */
-    background-color: #eeeeee; /* Цвет полоски */
+    background-color: #333; /* Цвет полоски */
     border-radius: 5px; /* Округлые края для полосок */
     transition: transform 0.3s ease, opacity 0.3s ease; /* Плавное изменение */
 }
@@ -605,7 +605,7 @@ body {
     margin-bottom: 15px;
   }
 
-  .custom-search-button {
+  .custom-search-button1 {
     background-color: #3faf4a; 
     color: white;
     border: none;

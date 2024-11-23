@@ -1,48 +1,33 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './store';
-import './App.css';
+
+import './assets/style.css'; 
 import EquipmentListDatacenter from './pages/EquipmentListDatacenter';
 import EquipmentDetailDatacenter from './pages/EquipmentDetailDatacenter';
 import HomeDatacenter from './pages/HomeDatacenter';
-import './assets/style.css'; // Убедитесь, что путь правильный
-import './index.css'; // Убедитесь, что путь правильный
 
-function App() {
+const App: React.FC = () => {
+  // Регистрация Service Worker
   useEffect(() => {
-    // Проверка на существование Tauri API
-    if (window.__TAURI__ && window.__TAURI__.tauri) {
-      const { invoke } = window.__TAURI__.tauri;
+    if ('serviceWorker' in navigator) {
+      const registerServiceWorker = async () => {
+        try {
+          const registration = await navigator.serviceWorker.register('./serviceWorker.js');
+          console.log('ServiceWorker зарегистрирован:', registration);
+        } catch (error) {
+          console.error('Ошибка регистрации ServiceWorker:', error);
+        }
+      };
 
-      // Вызов Tauri для выполнения команды 'create'
-      invoke('tauri', { cmd: 'create' })
-        .then((response: any) => console.log(response))
-        .catch((error: any) => console.log(error));
+      window.addEventListener('load', registerServiceWorker);
 
       return () => {
-        // Закрытие связи с Tauri при размонтировании
-        invoke('tauri', { cmd: 'close' })
-          .then((response: any) => console.log(response))
-          .catch((error: any) => console.log(error));
+        window.removeEventListener('load', registerServiceWorker);
       };
     }
   }, []);
-
-  useEffect(() => {
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker
-          .register('./serviceWorker.js')
-          .then((registration) => {
-            console.log('ServiceWorker зарегистрирован', registration);
-          })
-          .catch((error) => {
-            console.log('Ошибка регистрации сервис-воркера:', error);
-          });
-      });
-    }
-  }, []); // useEffect должен быть внутри компонента
 
   return (
     <Provider store={store}>
@@ -55,6 +40,6 @@ function App() {
       </Router>
     </Provider>
   );
-}
+};
 
 export default App;

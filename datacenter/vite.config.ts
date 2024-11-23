@@ -1,19 +1,21 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
-// https://vitejs.dev/config/
 export default defineConfig({
   server: {
-    host: '0.0.0.0',
+    host: '0.0.0.0', 
     port: 3000,
     proxy: {
       '/datacenter-services': {
         target: 'http://localhost:8000',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/datacenter-services/, '/datacenter-services'), // сохраняем путь без изменений
+        rewrite: (path: string) => path.replace(/^\/datacenter-services/, '/datacenter-services'),
       },
     },
   },
   plugins: [react()],
-  base: process.env.NODE_ENV === 'production' ? '/Frontend/' : '/',
+  logLevel: 'info',
+  build: {
+    outDir: 'dist', // Убедитесь, что путь для вывода правильный
+  },
 });

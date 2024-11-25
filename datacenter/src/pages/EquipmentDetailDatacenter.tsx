@@ -5,7 +5,9 @@ import '../assets/style.css';
 
 import { mockData } from '../mock/mockData';
 import Breadcrumb from '../components/Breadcrumb';
-import Navbar from '../components/Navbar'; 
+import Navbar from '../components/Navbar';
+
+const defaultImageUrl = '/images/default.png';
 
 const EquipmentDetailDatacenter = () => {
   const { id } = useParams<{ id: string }>();
@@ -70,10 +72,15 @@ const EquipmentDetailDatacenter = () => {
         <div className="service-detail-container">
         <h1 className="service-title">{equipment.name}</h1>
             <div className="service-info">
+              
             <img 
-                src={equipment.image_url || "http://127.0.0.1:9000/something/default.png"} 
-                alt={equipment.name} 
-                className="service-detail-image" 
+              src={equipment.image_url || defaultImageUrl} 
+              alt={equipment.name} 
+              className="service-detail-image" 
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.src = defaultImageUrl; // Подставляем дефолтное изображение
+              }}
             />
             <div className="service-text">
                 <ul className="service-details">

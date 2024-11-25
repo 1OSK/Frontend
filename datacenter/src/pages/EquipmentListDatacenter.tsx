@@ -21,7 +21,7 @@ export const EquipmentListDatacenter: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const defaultImageUrl = 'https://1osk.github.io/Frontend/images/default.png';
+  const defaultImageUrl = '/images/default.png';
 
   const breadcrumbItems = [
     { label: 'Главная', path: '/' },
@@ -112,7 +112,15 @@ export const EquipmentListDatacenter: React.FC = () => {
                   <p className="title">{service.name}</p>
                 </Link>
                 <div className="image-container">
-                  <img src={service.image_url || defaultImageUrl} alt={service.name} className="service-image" />
+                <img
+  src={service.image_url || defaultImageUrl}
+  alt={service.name}
+  className="service-image"
+  onError={(e) => {
+    const target = e.target as HTMLImageElement;
+    target.src = defaultImageUrl; // Подставляем дефолтное изображение
+  }}
+/>
                 </div>
                 <div className="card-price-button-container" style={{ marginTop: 'auto' }}>
                   {service.price && <p className="price">{service.price} руб.</p>}

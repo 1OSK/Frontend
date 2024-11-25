@@ -21,7 +21,7 @@ export const EquipmentListDatacenter: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const defaultImageUrl = 'https://1osk.github.io/Frontend/images/default.png';
+  const defaultImageUrl = '/images/default.png';
 
   const breadcrumbItems = [
     { label: 'Главная', path: '/' },

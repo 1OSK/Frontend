@@ -6,6 +6,9 @@ import '../assets/style.css';
 import { mockData } from '../mock/mockData';
 import Breadcrumb from '../components/Breadcrumb';
 import Navbar from '../components/Navbar'; 
+import { dest_api } from '../../target_config';
+
+const defaultImageUrl = '/images/default.png';
 
 const EquipmentDetailDatacenter = () => {
   const { id } = useParams<{ id: string }>();
@@ -20,7 +23,8 @@ const EquipmentDetailDatacenter = () => {
       setError(null); // Сбрасываем ошибки
 
       try {
-        const response = await fetch(`/datacenter-services/${id}/`);
+        const url = `${dest_api}/datacenter-services/${id}/`; // Формируем URL с использованием dest_api
+        const response = await fetch(url, { method: 'GET', credentials: 'include' }); // Указываем credentials, если нужно
         if (!response.ok) throw new Error(`Ошибка загрузки данных: ${response.statusText}`);
 
         const data = await response.json();
@@ -71,7 +75,7 @@ const EquipmentDetailDatacenter = () => {
         <h1 className="service-title">{equipment.name}</h1>
             <div className="service-info">
             <img 
-                src={equipment.image_url || "http://127.0.0.1:9000/something/default.png"} 
+                src={equipment.image_url || defaultImageUrl} 
                 alt={equipment.name} 
                 className="service-detail-image" 
             />

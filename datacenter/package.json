@@ -1,6 +1,7 @@
 {
   "name": "datacenter",
   "private": true,
+  "homepage": "https://1osk.github.io/Frontend",
   "version": "0.0.0",
   "type": "module",
   "scripts": {

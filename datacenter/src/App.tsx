@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './store';
@@ -8,6 +8,7 @@ import EquipmentDetailDatacenter from './pages/EquipmentDetailDatacenter';
 import HomeDatacenter from './pages/HomeDatacenter';
 import './assets/style.css'; // Убедитесь, что путь правильный
 import './index.css'; // Убедитесь, что путь правильный
+import { invoke } from "@tauri-apps/api/core";
 
 // Проверка, чтобы использовать правильный basename для GitHub Pages
 const isGitHubPages = window.location.hostname === '1osk.github.io';
@@ -24,7 +25,16 @@ const router = createBrowserRouter(
 );
 
 function App() {
-  
+  useEffect(()=>{
+    invoke('tauri', {cmd:'create'})
+      .then(() =>{console.log("Tauri launched")})
+      .catch(() =>{console.log("Tauri not launched")})
+    return () =>{
+      invoke('tauri', {cmd:'close'})
+        .then(() =>{console.log("Tauri launched")})
+        .catch(() =>{console.log("Tauri not launched")})
+    }
+  }, [])
 
   useEffect(() => {
     if ('serviceWorker' in navigator) {

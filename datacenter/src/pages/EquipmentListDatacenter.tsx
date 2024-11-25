@@ -10,7 +10,7 @@ import { setMinPrice, setMaxPrice } from '../slices/dataSlice';
 import { mockData } from '../mock/mockData';
 import Navbar from '../components/Navbar'; 
 import Slider from 'rc-slider'; 
-
+import { dest_api } from '../../target_config';
 import 'rc-slider/assets/index.css'; 
 export const EquipmentListDatacenter: React.FC = () => {
   const dispatch = useDispatch();
@@ -36,16 +36,16 @@ export const EquipmentListDatacenter: React.FC = () => {
     setLoading(true);
     setError(null);
 
-    let url = '/datacenter-services/';
+    let url = `${dest_api}/datacenter-services/`;  // Используем dest_api для формирования URL
     if (minPrice || maxPrice) {
       url += `?datacenter_min_price=${minPrice}&datacenter_max_price=${maxPrice}`;
     }
 
     try {
-      const response = await fetch(url);
+      const response = await fetch(url, { method: 'GET', credentials: 'include' });
       if (!response.ok) throw new Error('Ошибка при загрузке данных');
       const data = await response.json();
-      setServices(data.datacenters);
+      setServices(data.datacenters); // Предположим, что данные приходят с полем datacenters
     } catch (err) {
       setError('Ошибка при загрузке данных');
     } finally {

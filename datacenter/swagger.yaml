@@ -1,0 +1,648 @@
+swagger: '2.0'
+info:
+  title: My Datacenter
+  description: Test description
+  termsOfService: https://www.google.com/policies/terms/
+  contact:
+    email: contact@myapi.local
+  license:
+    name: BSD License
+  version: v1
+host: localhost:8000
+schemes:
+- http
+basePath: /
+consumes:
+- application/json
+produces:
+- application/json
+securityDefinitions:
+  Basic:
+    type: basic
+security:
+- Basic: []
+paths:
+  /datacenter-orders-services/{datacenter_order_id}/datacenter-services/{datacenter_service_id}/delete/:
+    delete:
+      operationId: datacenter-orders-services_datacenter-services_delete_delete
+      description: Удаление товара из заказа
+      parameters: []
+      responses:
+        '200':
+          description: Количество товаров уменьшено на 1
+        '204':
+          description: Товар удален из заказа
+        '400':
+          description: Заказ удален или не может быть изменен
+        '404':
+          description: Товар не найден в заказе
+      tags:
+      - datacenter-orders-services
+    parameters:
+    - name: datacenter_order_id
+      in: path
+      required: true
+      type: string
+    - name: datacenter_service_id
+      in: path
+      required: true
+      type: string
+  /datacenter-orders-services/{datacenter_order_id}/datacenter-services/{datacenter_service_id}/update/:
+    put:
+      operationId: datacenter-orders-services_datacenter-services_update_update
+      description: Изменение количества товаров в заказе
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          required:
+          - quantity
+          type: object
+          properties:
+            quantity:
+              description: Новое количество товаров
+              type: integer
+      responses:
+        '200':
+          description: Количество товаров обновлено в заказе
+        '400':
+          description: Некорректное количество или другое сообщение об ошибке
+        '404':
+          description: Товар не найден в заказе
+      tags:
+      - datacenter-orders-services
+    parameters:
+    - name: datacenter_order_id
+      in: path
+      required: true
+      type: string
+    - name: datacenter_service_id
+      in: path
+      required: true
+      type: string
+  /datacenter-orders/:
+    get:
+      operationId: datacenter-orders_list
+      summary: Получить список заказов
+      description: Возвращает список заказов с фильтрацией по статусу и дате создания.
+      parameters:
+      - name: datacenter_status
+        in: query
+        description: Фильтр по статусу заказа
+        type: string
+      - name: datacenter_start_date
+        in: query
+        description: Начальная дата
+        type: string
+      - name: datacenter_end_date
+        in: query
+        description: Конечная дата
+        type: string
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/DatacenterOrder'
+        '400':
+          description: Ошибка в запросе
+      tags:
+      - datacenter-orders
+    parameters: []
+  /datacenter-orders/{id}/:
+    get:
+      operationId: datacenter-orders_read
+      summary: Получить заказ
+      description: Возвращает информацию о конкретном заказе по его ID.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/DatacenterOrder'
+        '404':
+          description: Заказ не найден
+      tags:
+      - datacenter-orders
+    parameters:
+    - name: id
+      in: path
+      required: true
+      type: string
+  /datacenter-orders/{id}/delete/:
+    delete:
+      operationId: datacenter-orders_delete_delete
+      summary: Удалить заказ
+      description: Помечает заказ как удалённый.
+      parameters: []
+      responses:
+        '204':
+          description: Заказ удалён
+        '404':
+          description: Заказ не найден
+        '400':
+          description: Невозможно удалить
+      tags:
+      - datacenter-orders
+    parameters:
+    - name: id
+      in: path
+      required: true
+      type: string
+  /datacenter-orders/{id}/finalize/:
+    put:
+      operationId: datacenter-orders_finalize_update
+      summary: Завершить или отклонить заказ
+      description: Завершает или отклоняет заказ по его ID.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          required:
+          - action
+          type: object
+          properties:
+            action:
+              description: 'Действие: completed или rejected'
+              type: string
+      responses:
+        '200':
+          description: Заявка завершена
+        '400':
+          description: Ошибка завершения
+        '403':
+          description: Нет прав
+      tags:
+      - datacenter-orders
+    parameters:
+    - name: id
+      in: path
+      required: true
+      type: string
+  /datacenter-orders/{id}/submit/:
+    put:
+      operationId: datacenter-orders_submit_update
+      summary: Подтвердить заказ
+      description: Подтверждает заказ по его ID.
+      parameters: []
+      responses:
+        '200':
+          description: Заказ подтверждён
+        '404':
+          description: Заказ не найден
+        '400':
+          description: Ошибка подтверждения
+      tags:
+      - datacenter-orders
+    parameters:
+    - name: id
+      in: path
+      required: true
+      type: string
+  /datacenter-orders/{id}/update/:
+    put:
+      operationId: datacenter-orders_update_update
+      summary: Изменить заказ
+      description: Обновляет данные заказа по его ID.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/DatacenterOrder'
+      responses:
+        '200':
+          description: Заказ обновлен
+        '404':
+          description: Заказ не найден
+        '400':
+          description: Ошибка обновления
+      tags:
+      - datacenter-orders
+    parameters:
+    - name: id
+      in: path
+      required: true
+      type: string
+  /datacenter-services/:
+    get:
+      operationId: datacenter-services_list
+      summary: Получить список товаров
+      description: Возвращает список товаров с фильтрацией по цене.
+      parameters:
+      - name: datacenter_min_price
+        in: query
+        description: Минимальная цена для фильтрации
+        required: false
+        type: number
+      - name: datacenter_max_price
+        in: query
+        description: Максимальная цена для фильтрации
+        required: false
+        type: number
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/DatacenterService'
+        '400':
+          description: Ошибка в параметрах запроса
+          schema:
+            type: object
+            properties:
+              error:
+                description: Описание ошибки
+                type: string
+      tags:
+      - datacenter-services
+    parameters: []
+  /datacenter-services/create/:
+    post:
+      operationId: datacenter-services_create_create
+      summary: Создать новый товар
+      description: Создает новый товар в базе данных.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/DatacenterService'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/DatacenterService'
+      tags:
+      - datacenter-services
+    parameters: []
+  /datacenter-services/{id}/:
+    get:
+      operationId: datacenter-services_read
+      summary: Получить товар по ID
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/DatacenterService'
+      tags:
+      - datacenter-services
+    parameters:
+    - name: id
+      in: path
+      required: true
+      type: string
+  /datacenter-services/{id}/add-image/:
+    post:
+      operationId: datacenter-services_add-image_create
+      summary: Добавить изображение к товару
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          type: object
+          properties:
+            image:
+              description: Изображение для добавления
+              type: file
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/DatacenterServiceImage'
+        '400':
+          description: Ошибка при добавлении изображения
+      tags:
+      - datacenter-services
+    parameters:
+    - name: id
+      in: path
+      required: true
+      type: string
+  /datacenter-services/{id}/add-to-draft/:
+    post:
+      operationId: datacenter-services_add-to-draft_create
+      summary: Добавить товар в черновик заказа
+      description: ''
+      parameters: []
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/DatacenterOrder'
+        '400':
+          description: Ошибка при добавлении в черновик
+      tags:
+      - datacenter-services
+    parameters:
+    - name: id
+      in: path
+      required: true
+      type: string
+  /datacenter-services/{id}/delete/:
+    delete:
+      operationId: datacenter-services_delete_delete
+      summary: Удалить товар
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: Товар успешно удален
+        '400':
+          description: Ошибка при удалении
+      tags:
+      - datacenter-services
+    parameters:
+    - name: id
+      in: path
+      required: true
+      type: string
+  /datacenter-services/{id}/update/:
+    put:
+      operationId: datacenter-services_update_update
+      summary: Обновить товар
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/DatacenterService'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/DatacenterService'
+        '400':
+          description: Ошибка при обновлении
+      tags:
+      - datacenter-services
+    parameters:
+    - name: id
+      in: path
+      required: true
+      type: string
+  /users/:
+    post:
+      operationId: users_create
+      summary: Регистрация пользователя
+      description: Создает нового пользователя с указанными данными.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Register'
+      responses:
+        '201':
+          description: Пользователь успешно зарегистрирован
+          schema:
+            type: object
+            properties:
+              email:
+                description: Email пользователя
+                type: string
+        '400':
+          description: Ошибка валидации данных
+      tags:
+      - users
+    parameters: []
+  /users/login/:
+    post:
+      operationId: users_login_create
+      summary: Вход пользователя
+      description: Аутентификация пользователя по email и паролю.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          required:
+          - email
+          - password
+          type: object
+          properties:
+            email:
+              description: Email пользователя
+              type: string
+            password:
+              description: Пароль пользователя
+              type: string
+      responses:
+        '200':
+          description: Успешный вход
+          schema:
+            type: object
+            properties:
+              email:
+                description: Email пользователя
+                type: string
+              access:
+                description: Access токен
+                type: string
+              refresh:
+                description: Refresh токен
+                type: string
+        '401':
+          description: Неверный email или пароль.
+      tags:
+      - users
+    parameters: []
+  /users/logout/:
+    post:
+      operationId: users_logout_create
+      summary: Выход пользователя
+      description: Разлогинивает пользователя.
+      parameters: []
+      responses:
+        '200':
+          description: Успешный выход из системы
+        '401':
+          description: Отсутствует идентификатор сессии.
+      tags:
+      - users
+    parameters: []
+  /users/update/:
+    put:
+      operationId: users_update_update
+      summary: Обновление информации о пользователе
+      description: Частично обновляет данные пользователя.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/User'
+      responses:
+        '200':
+          description: Информация о пользователе успешно обновлена
+        '404':
+          description: Пользователь не найден.
+        '400':
+          description: Ошибка валидации данных
+      tags:
+      - users
+    parameters: []
+definitions:
+  DatacenterService:
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      name:
+        title: Name
+        type: string
+        maxLength: 255
+        minLength: 1
+      description:
+        title: Description
+        type: string
+        x-nullable: true
+      image_url:
+        title: Image url
+        type: string
+        format: uri
+        maxLength: 200
+        x-nullable: true
+      price:
+        title: Price
+        type: integer
+        maximum: 2147483647
+        minimum: 0
+        x-nullable: true
+  DatacenterOrderService:
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      service:
+        $ref: '#/definitions/DatacenterService'
+      quantity:
+        title: Quantity
+        type: integer
+        maximum: 2147483647
+        minimum: 0
+        x-nullable: true
+  DatacenterOrder:
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      status:
+        title: Status
+        type: string
+        enum:
+        - draft
+        - deleted
+        - formed
+        - completed
+        - rejected
+      creation_date:
+        title: Creation date
+        type: string
+        format: date-time
+        readOnly: true
+      formation_date:
+        title: Formation date
+        type: string
+        format: date-time
+        x-nullable: true
+      completion_date:
+        title: Completion date
+        type: string
+        format: date-time
+        x-nullable: true
+      creator_name:
+        title: Creator name
+        type: string
+        readOnly: true
+        minLength: 1
+      moderator_name:
+        title: Email модератора
+        type: string
+        readOnly: true
+        minLength: 1
+        x-nullable: true
+      delivery_address:
+        title: Delivery address
+        type: string
+        maxLength: 255
+        x-nullable: true
+      delivery_time:
+        title: Delivery time
+        type: string
+        format: date-time
+        x-nullable: true
+      total_price:
+        title: Total price
+        type: integer
+        maximum: 2147483647
+        minimum: 0
+        x-nullable: true
+      datacenters:
+        type: array
+        items:
+          $ref: '#/definitions/DatacenterOrderService'
+  DatacenterServiceImage:
+    type: object
+    properties:
+      image_url:
+        title: Image url
+        type: string
+        format: uri
+        maxLength: 200
+        x-nullable: true
+  Register:
+    required:
+    - email
+    - password
+    type: object
+    properties:
+      email:
+        title: Email
+        type: string
+        format: email
+        maxLength: 255
+        minLength: 1
+      password:
+        title: Password
+        type: string
+        minLength: 1
+  User:
+    required:
+    - email
+    - password
+    type: object
+    properties:
+      email:
+        title: Email
+        type: string
+        format: email
+        maxLength: 255
+        minLength: 1
+      password:
+        title: Password
+        type: string
+        minLength: 1
+      is_staff:
+        title: Is staff
+        type: boolean
+        default: false
+      is_superuser:
+        title: Is superuser
+        type: boolean
+        default: false

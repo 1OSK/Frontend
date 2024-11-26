@@ -5,6 +5,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "generate-api": "node scripts/generate-api.mjs",
     "tauri": "tauri",
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -17,6 +18,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.3.0",
     "@tauri-apps/api": "^2.0.0",
+    "axios": "^1.7.8",
     "bootstrap": "^5.3.3",
     "rc-slider": "^11.1.7",
     "react": "^18.2.0",
@@ -40,6 +42,7 @@
     "gh-pages": "^6.2.0",
     "globals": "^15.11.0",
     "rollup": "^4.27.4",
+    "swagger-typescript-api": "^13.0.23",
     "typescript": "^5.2.2",
     "vite": "^5.4.9"
   }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../assets/style.css';
@@ -6,6 +6,7 @@ import '../assets/style.css';
 import { mockData } from '../mock/mockData';
 import Breadcrumb from '../components/Breadcrumb';
 import Navbar from '../components/Navbar';
+import axios from 'axios';
 
 const defaultImageUrl = '/images/default.png';
 
@@ -22,12 +23,8 @@ const EquipmentDetailDatacenter = () => {
       setError(null); // Сбрасываем ошибки
 
       try {
-        const response = await fetch(`/datacenter-services/${id}/`);
-        if (!response.ok) throw new Error(`Ошибка загрузки данных: ${response.statusText}`);
-
-        const data = await response.json();
-        setEquipment(data); // Устанавливаем полученные данные в локальное состояние
-        setError(null); // Сбрасываем ошибку
+        const response = await axios.get(`/datacenter-services/${id}/`);
+        setEquipment(response.data); // Устанавливаем полученные данные в локальное состояние
       } catch (err) {
         console.error('Ошибка запроса:', err);
 
@@ -59,20 +56,16 @@ const EquipmentDetailDatacenter = () => {
     { label: equipment.name, path: '#' },
   ];
 
-
-
-
   return (
     <>
       <Navbar />
 
       <Breadcrumb items={breadcrumbItems} />
 
-      <div className="background-block" >
+      <div className="background-block">
         <div className="service-detail-container">
-        <h1 className="service-title">{equipment.name}</h1>
-            <div className="service-info">
-              
+          <h1 className="service-title">{equipment.name}</h1>
+          <div className="service-info">
             <img 
               src={equipment.image_url || defaultImageUrl} 
               alt={equipment.name} 
@@ -83,18 +76,18 @@ const EquipmentDetailDatacenter = () => {
               }}
             />
             <div className="service-text">
-                <ul className="service-details">
+              <ul className="service-details">
                 {equipment.description ? (
-                    equipment.description.split(',').map((item: string, index: number) => (
+                  equipment.description.split(',').map((item: string, index: number) => (
                     <li key={index}>• {item.trim()}</li>
-                    ))
+                  ))
                 ) : (
-                    <li>Информация о деталях недоступна.</li>
+                  <li>Информация о деталях недоступна.</li>
                 )}
-                </ul>
-                <p className="price"><strong>Цена:</strong> {equipment.price} руб.</p>
+              </ul>
+              <p className="price"><strong>Цена:</strong> {equipment.price} руб.</p>
             </div>
-            </div>
+          </div>
         </div>
       </div>
     </>

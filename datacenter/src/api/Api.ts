@@ -189,7 +189,7 @@ export class HttpClient<SecurityDataType = unknown> {
   private format?: ResponseType;
 
   constructor({ securityWorker, secure, format, ...axiosConfig }: ApiConfig<SecurityDataType> = {}) {
-    this.instance = axios.create({ ...axiosConfig, baseURL: axiosConfig.baseURL || "http://localhost:8000" });
+    this.instance = axios.create({ ...axiosConfig, baseURL: axiosConfig.baseURL || "http://127.0.0.1:8000" });
     this.secure = secure;
     this.format = format;
     this.securityWorker = securityWorker;
@@ -283,7 +283,7 @@ export class HttpClient<SecurityDataType = unknown> {
  * @version v1
  * @license BSD License
  * @termsOfService https://www.google.com/policies/terms/
- * @baseUrl http://localhost:8000
+ * @baseUrl http://127.0.0.1:8000
  * @contact <contact@myapi.local>
  *
  * Test description
@@ -646,7 +646,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
-     * @description Аутентификация пользователя по email и паролю.
+     * @description Аутентификация пользователя по email и паролю. При успешной аутентификации создается сессия, которая сохраняется в Redis с уникальным идентификатором сессии.
      *
      * @tags users
      * @name UsersLoginCreate
@@ -665,12 +665,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     ) =>
       this.request<
         {
-          /** Email пользователя */
-          email?: string;
-          /** Access токен */
-          access?: string;
-          /** Refresh токен */
-          refresh?: string;
+          /** Идентификатор сессии пользователя, сохранённый в Redis */
+          session_id?: string;
         },
         void
       >({
@@ -684,7 +680,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
-     * @description Разлогинивает пользователя.
+     * @description Метод для выхода пользователя из системы. Удаляет session_id из Redis и завершает сессию.
      *
      * @tags users
      * @name UsersLogoutCreate

@@ -8,7 +8,7 @@ info:
   license:
     name: BSD License
   version: v1
-host: localhost:8000
+host: 127.0.0.1:8000
 schemes:
 - http
 basePath: /
@@ -419,7 +419,9 @@ paths:
     post:
       operationId: users_login_create
       summary: Вход пользователя
-      description: Аутентификация пользователя по email и паролю.
+      description: Аутентификация пользователя по email и паролю. При успешной аутентификации
+        создается сессия, которая сохраняется в Redis с уникальным идентификатором
+        сессии.
       parameters:
       - name: data
         in: body
@@ -442,17 +444,13 @@ paths:
           schema:
             type: object
             properties:
-              email:
-                description: Email пользователя
-                type: string
-              access:
-                description: Access токен
-                type: string
-              refresh:
-                description: Refresh токен
+              session_id:
+                description: Идентификатор сессии пользователя, сохранённый в Redis
                 type: string
         '401':
           description: Неверный email или пароль.
+        '500':
+          description: Ошибка создания сессии или сохранения в Redis.
       tags:
       - users
     parameters: []
@@ -460,11 +458,12 @@ paths:
     post:
       operationId: users_logout_create
       summary: Выход пользователя
-      description: Разлогинивает пользователя.
+      description: Метод для выхода пользователя из системы. Удаляет session_id из
+        Redis и завершает сессию.
       parameters: []
       responses:
         '200':
-          description: Успешный выход из системы
+          description: Успешный выход из системы.
         '401':
           description: Отсутствует идентификатор сессии.
       tags:

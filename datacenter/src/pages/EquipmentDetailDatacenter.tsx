@@ -68,7 +68,7 @@ const EquipmentDetailDatacenter = () => {
 
       <Breadcrumb items={breadcrumbItems} />
 
-      <div className="background-block" style={{ paddingTop: '10px' }}>
+      <div className="background-block" >
         <div className="service-detail-container">
         <h1 className="service-title">{equipment.name}</h1>
             <div className="service-info">

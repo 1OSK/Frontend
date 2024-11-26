@@ -14,7 +14,7 @@ export default defineConfig({
     },
   },
   plugins: [react()],
-  base: "/Frontend",
+  base: "",
   logLevel: 'info',
   build: {
     outDir: 'dist', // Убедитесь, что путь для вывода правильный

@@ -620,3 +620,125 @@ body {
     background-color: #ccc; /* Светло-серый для неактивного состояния */
     cursor: not-allowed;
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Стили для страницы регистрации */
+.register-container {
+    width: 100%;
+    max-width: 450px;
+    margin: 50px auto;
+    padding: 40px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    text-align: center;
+  }
+  
+  h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+    font-weight: 600;
+  }
+  
+  .input-group {
+    margin-bottom: 20px;
+  }
+  
+  .input-group label {
+    display: block;
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 8px;
+  }
+  
+  .input-field {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    color: white; /* Цвет текста внутри поля ввода */
+    background-color: #333; /* Тёмный фон для поля ввода */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    outline: none;
+    transition: all 0.3s ease;
+  }
+  
+  .input-field:focus {
+    border-color: #3faf4a;
+    box-shadow: 0 0 5px rgba(63, 175, 74, 0.6);
+    background-color: #444; /* Немного светлее фон при фокусе */
+  }
+  
+  button.submit-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #3faf4a;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button.submit-btn:hover {
+    background-color: #369f40;
+  }
+  
+  button.submit-btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  .error-message {
+    color: #e74c3c;
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+  
+  .success-message {
+    color: #3faf4a;
+    font-size: 16px;
+    margin-bottom: 20px;
+    font-weight: 500;
+  }
+  
+
+
+
+
+
+
+
+
+
+
+  /* Стили для страницы входа */
+.login-container {
+    width: 100%;
+    max-width: 450px;
+    margin: 50px auto;
+    padding: 40px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    text-align: center;
+  }
+
+
+

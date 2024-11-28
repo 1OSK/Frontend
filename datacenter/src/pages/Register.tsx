@@ -1,9 +1,11 @@
-// src/pages/Register.tsx
-
 import React, { useState } from 'react';
 import { Api } from '../api/Api'; // Импортируем сгенерированный API
 import { AxiosResponse } from 'axios'; // Для уточнения типа ответа от сервера
 import Navbar from "../components/Navbar";
+import Breadcrumb from "../components/Breadcrumb"; // Импортируем компонент хлебной крошки
+
+import '../assets/style.css'; // Импортируем глобальные стили
+
 const Register = () => {
   // Состояния для хранения значений формы
   const [email, setEmail] = useState<string>('');
@@ -51,53 +53,59 @@ const Register = () => {
 
   return (
     <>
-    {/* Navbar теперь в самом верху */}
-    <Navbar />
+      <Navbar />
+      <Breadcrumb items={[{ label: "Главная", path: "/" }, { label: "Регистрация", path: "/register" }]} />
 
-    <div className="register-container">
-      <h2>Регистрация</h2>
-      <form onSubmit={handleSubmit}>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        {success && <p style={{ color: 'green' }}>{success}</p>}
+      <div className="register-container">
+        <h2>Регистрация</h2>
+        {success ? (
+          <p className="success-message">{success}</p>
+        ) : (
+          <form onSubmit={handleSubmit}>
+            {error && <p className="error-message">{error}</p>}
+            
+            <div className="input-group">
+              <label htmlFor="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="input-field"
+              />
+            </div>
 
-        <div>
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
+            <div className="input-group">
+              <label htmlFor="password">Пароль</label>
+              <input
+                type="password"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="input-field"
+              />
+            </div>
 
-        <div>
-          <label htmlFor="password">Пароль</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
+            <div className="input-group">
+              <label htmlFor="confirmPassword">Подтвердите пароль</label>
+              <input
+                type="password"
+                id="confirmPassword"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                className="input-field"
+              />
+            </div>
 
-        <div>
-          <label htmlFor="confirmPassword">Подтвердите пароль</label>
-          <input
-            type="password"
-            id="confirmPassword"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
-        </div>
-
-        <button type="submit" disabled={loading}>
-          {loading ? 'Загрузка...' : 'Зарегистрироваться'}
-        </button>
-      </form>
-    </div>
+            <button type="submit" disabled={loading} className="submit-btn">
+              {loading ? 'Загрузка...' : 'Зарегистрироваться'}
+            </button>
+          </form>
+        )}
+      </div>
     </>
   );
 };

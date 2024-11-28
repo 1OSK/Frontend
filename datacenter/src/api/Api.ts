@@ -680,7 +680,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
-     * @description Метод для выхода пользователя из системы. Удаляет session_id из Redis и завершает сессию.
+     * @description Метод для выхода пользователя из системы. Удаляет session_id из Redis и завершает сессию. session_id передается в теле запроса.
      *
      * @tags users
      * @name UsersLogoutCreate

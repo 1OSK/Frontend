@@ -16,27 +16,34 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const api = new Api();
 
+  // Удаляем sessionId из куки
+  const deleteSessionCookie = () => {
+    document.cookie = `sessionid=${sessionId}; path=/; SameSite=Strict`;
+  };
+
   // Обработчик открытия/закрытия меню
   const toggleMenu = () => {
     setMenuActive(!menuActive);
   };
 
-  // Обработчик выхода из системы
   const handleLogout = async () => {
-    if (!sessionId) {
-      alert("Не найден session_id. Пожалуйста, войдите снова.");
-      return;
-    }
-
     try {
-      // Запрос на выход из системы с передачей session_id в теле запроса
+      if (!sessionId) {
+        alert("Не найден session_id. Пожалуйста, войдите снова.");
+        return;
+      }
+  
+      // Устанавливаем session_id в куки (без HttpOnly)
+      document.cookie = `sessionid=${sessionId}; path=/; SameSite=Strict`;
+  
+      // Запрос на выход из системы
       const response = await api.users.usersLogoutCreate({
-        // Передаем session_id как часть тела запроса
-        body: { sessionid: sessionId }, // sessionid должен быть в теле запроса
-      } as RequestParams); // Явно приводим тип к RequestParams
-
-      // Проверка успешного ответа
+        withCredentials: true, // Передаем куки с запросом
+      } as RequestParams);
+  
       if (response && response.status === 200) {
+        // Удаляем куки после успешного выхода
+        deleteSessionCookie();
         dispatch(logout()); // Обновляем Redux-состояние
         console.log("Выход выполнен успешно");
       } else {

@@ -17,6 +17,7 @@ export const EquipmentListDatacenter: React.FC = () => {
   const dispatch = useDispatch();
   const minPrice = useSelector((state: RootState) => state.ourData.minPrice);
   const maxPrice = useSelector((state: RootState) => state.ourData.maxPrice);
+  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
 
   const [services, setServices] = useState(mockData);
   const [loading, setLoading] = useState(false);
@@ -29,9 +30,10 @@ export const EquipmentListDatacenter: React.FC = () => {
     { label: 'Список товаров', path: '/datacenter-services' },
   ];
 
+  // Функция для загрузки данных при монтировании
   useEffect(() => {
     fetchServices();
-  }, []);
+  }, [isAuthenticated]);  // Если статус авторизации изменится, перезагрузим данные
 
   const fetchServices = async () => {
     setLoading(true);
@@ -66,7 +68,12 @@ export const EquipmentListDatacenter: React.FC = () => {
         <Breadcrumb items={breadcrumbItems} />
 
         <div className="order-info">
-          <span className="current-order-button disabled text-muted">Текущий заказ недоступен</span>
+          <span
+            className={`current-order-button ${isAuthenticated ? '' : 'disabled text-muted'}`}
+            style={isAuthenticated ? {  } : {}}
+          >
+            {isAuthenticated ? 'Оформить заказ' : 'Войдите, чтобы оформить заказ'}
+          </span>
         </div>
 
         <div className="breadcrumb-controls">
@@ -121,10 +128,16 @@ export const EquipmentListDatacenter: React.FC = () => {
                 <div className="card-price-button-container" style={{ marginTop: 'auto' }}>
                   {service.price && <p className="price">{service.price} руб.</p>}
                   <div className="button-container">
-                    <Link to={`/datacenter-services/${service.id}/`} className="card-button">Подробнее о комплектующем</Link>
-                    <div className="add-button-container">
-                      <Button variant="secondary" disabled className="card-button disabled">Добавить в заказ</Button>
-                    </div>
+                    <Link to={`/datacenter-services/${service.id}/`} className="card-button">
+                      Подробнее о комплектующем
+                    </Link>
+                    {isAuthenticated && (
+                      <div className="add-button-container">
+                        <Button variant="secondary" className="card-button">
+                          Добавить в заказ
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

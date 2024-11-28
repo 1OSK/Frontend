@@ -548,6 +548,35 @@ body {
 
 
 
+/* Стиль для кнопки "Оформить заказ", когда она активна */
+.current-order-button {
+    background-color: #3faf4a; /* Зеленый цвет кнопки */
+    color: white; /* Белый текст */
+    padding: 10px 20px; /* Отступы */
+    border: none; /* Убираем границу */
+    border-radius: 5px; /* Скругленные углы */
+    font-size: 16px; /* Размер шрифта */
+    cursor: pointer; /* Курсор в виде указателя */
+    transition: background-color 0.3s, transform 0.2s ease-in-out; /* Плавные переходы */
+  }
+  
+  .current-order-button:hover {
+    background-color: #349d3e; /* Цвет кнопки при наведении */
+    transform: scale(1.05); /* Лёгкое увеличение при наведении */
+  }
+  
+  .current-order-button:active {
+    background-color: #2d8e32; /* Цвет кнопки при нажатии */
+    transform: scale(1); /* Возвращение в исходный размер */
+  }
+  
+  .current-order-button.disabled {
+    background-color: #ccc; /* Серый цвет для неактивной кнопки */
+    color: #666; /* Темный текст для неактивной кнопки */
+    cursor: not-allowed; /* Убираем курсор указателя */
+  }
+
+
 
 
 

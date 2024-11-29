@@ -4,9 +4,23 @@ import Navbar from '../components/Navbar';
 import Breadcrumb from '../components/Breadcrumb';
 import { RootState } from '../store';
 import { Api, DatacenterOrder } from '../api/Api';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css"; 
+import { FaCalendarAlt } from 'react-icons/fa';
+
+const formatTime = (time: Date | null) => {
+  if (!time) return 'Не выбрано';
+  return time.toLocaleString('ru-RU', {
+    weekday: 'long',   
+    year: 'numeric',   
+    month: 'long',     
+    day: 'numeric',    
+    hour: '2-digit',   
+    minute: '2-digit', 
+  });
+};
 
 const OrderDetailDatacenter = () => {
-  // Получаем sessionId и draftOrderId из Redux
   const sessionId = useSelector((state: RootState) => state.auth.sessionId);
   const draftOrderId = useSelector((state: RootState) => state.ourData.draftOrderId);
 
@@ -14,37 +28,30 @@ const OrderDetailDatacenter = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+  const [deliveryAddress, setDeliveryAddress] = useState<string>('');
+  const [deliveryTime, setDeliveryTime] = useState<Date | null>(null);
+
+  const api = new Api();
+
   useEffect(() => {
+    if (!sessionId || !draftOrderId) {
+      setError('Необходимо авторизоваться и получить ID заказа.');
+      return;
+    }
+
     const fetchOrderDetails = async () => {
-      if (!sessionId) {
-        setError('Вы не авторизованы.');
-        return;
-      }
-
-      if (!draftOrderId) {
-        setError('ID заказа отсутствует.');
-        return;
-      }
-
-      // Установка session_id в куки
-      document.cookie = `sessionid=${sessionId}; path=/; SameSite=Strict`;
-
       setLoading(true);
       setError(null);
 
       try {
-        const api = new Api();
-        // Запрос к API
+        document.cookie = `sessionid=${sessionId}; path=/; SameSite=Strict`;
+
         const response = await api.datacenterOrders.datacenterOrdersRead(draftOrderId.toString(), {
           withCredentials: true,
         });
 
-        console.log('Ответ сервера:', response.data);
-
-        // Извлекаем данные из ответа сервера
         const { id, status, creation_date, formation_date, completion_date, creator_name, moderator_name, delivery_address, delivery_time, total_price, datacenters } = response.data;
 
-        // Устанавливаем данные заказа в состояние
         setOrderDetails({
           id,
           status,
@@ -58,6 +65,9 @@ const OrderDetailDatacenter = () => {
           total_price,
           datacenters,
         });
+
+        setDeliveryAddress(delivery_address || '');
+        setDeliveryTime(delivery_time ? new Date(delivery_time) : null);
       } catch (err) {
         setError('Ошибка при загрузке данных заказа');
         console.error('Ошибка:', err);
@@ -69,9 +79,49 @@ const OrderDetailDatacenter = () => {
     fetchOrderDetails();
   }, [sessionId, draftOrderId]);
 
+  const handleSubmitOrder = async () => {
+    if (!draftOrderId) {
+      setError('ID заказа отсутствует.');
+      return;
+    }
+
+    if (!deliveryAddress || !deliveryTime) {
+      setError('Пожалуйста, заполните все поля: адрес и время доставки.');
+      return;
+    }
+
+    // Сначала обновляем данные заказа (адрес и время)
+    try {
+      const updatedOrder = {
+        ...orderDetails,
+        delivery_address: deliveryAddress ? deliveryAddress : null,
+        delivery_time: deliveryTime ? deliveryTime.toISOString() : null,
+      };
+
+      const response = await api.datacenterOrders.datacenterOrdersUpdateUpdate(draftOrderId.toString(), updatedOrder, {
+        withCredentials: true,
+      });
+
+      // После успешного обновления, подтверждаем заказ
+      await api.datacenterOrders.datacenterOrdersSubmitUpdate(draftOrderId.toString(), {
+        withCredentials: true,
+      });
+
+      setOrderDetails(updatedOrder);
+      setError(null);
+      alert('Заказ успешно обновлен и подтвержден!');
+    } catch (err) {
+      setError('Ошибка при обновлении или подтверждении заказа');
+      console.error('Ошибка:', err);
+    }
+  };
+
+  const handleDateChange = (date: Date | null) => {
+    setDeliveryTime(date);
+  };
+
   return (
     <div>
-      {/* Навигация (Navbar) и хлебные крошки */}
       <Navbar />
       <Breadcrumb 
         items={[
@@ -81,12 +131,10 @@ const OrderDetailDatacenter = () => {
         ]}
       />
 
-      {/* Ошибка или загрузка */}
       {loading && <div>Загрузка...</div>}
       {error && <div className="error-message">{error}</div>}
       {(!orderDetails || error) && !loading && <div>Данные заказа недоступны</div>}
 
-      {/* Основное содержимое заказа */}
       {orderDetails && !loading && !error && (
         <div>
           <h1>Детали заказа</h1>
@@ -97,20 +145,64 @@ const OrderDetailDatacenter = () => {
             {orderDetails.completion_date && <p>Дата завершения: {orderDetails.completion_date}</p>}
             <p>Сумма: {orderDetails.total_price}</p>
             {orderDetails.delivery_address && <p>Адрес доставки: {orderDetails.delivery_address}</p>}
-            {orderDetails.delivery_time && <p>Время доставки: {orderDetails.delivery_time}</p>}
+            {orderDetails.delivery_time && <p>Время доставки: {new Date(orderDetails.delivery_time).toLocaleString()}</p>}
+          </div>
+
+          <h2>Редактировать данные</h2>
+          <div>
+            <label>
+              Адрес доставки:
+              <input
+                type="text"
+                value={deliveryAddress}
+                onChange={(e) => setDeliveryAddress(e.target.value)}
+                placeholder="Введите адрес доставки"
+              />
+            </label>
+            <br />
+            <label>
+              Время доставки:
+              <div style={{ position: 'relative' }}>
+                <FaCalendarAlt 
+                  style={{
+                    position: 'absolute',
+                    top: '50%',
+                    right: '10px',
+                    transform: 'translateY(-50%)',
+                    cursor: 'pointer',
+                    fontSize: '20px',
+                  }}
+                  onClick={() => document.getElementById('datepicker')?.click()}
+                />
+                <DatePicker
+                  id="datepicker"
+                  selected={deliveryTime}
+                  onChange={handleDateChange}
+                  showTimeSelect
+                  timeIntervals={15}
+                  dateFormat="Pp"
+                  placeholderText="Выберите время доставки"
+                  customInput={<div />}
+                />
+              </div>
+            </label>
+            <div>
+              <strong>Выбранное время:</strong> {formatTime(deliveryTime)}
+            </div>
+            <br />
+            <button onClick={handleSubmitOrder}>Подтвердить заказ</button>
           </div>
 
           <h2>Услуги</h2>
           {orderDetails.datacenters && orderDetails.datacenters.length > 0 ? (
             orderDetails.datacenters.map((service, index) => (
               <div key={index} style={{ marginBottom: '20px' }}>
-                <p>Услуга ID: {service.service?.id}</p> {/* ID услуги */}
-                <p>Название: {service.service?.name}</p> {/* Название услуги */}
-                <p>Описание: {service.service?.description}</p> {/* Описание услуги */}
-                <p>Цена: {service.service?.price}</p> {/* Цена услуги */}
-                <p>Количество: {service.quantity}</p> {/* Количество услуги */}
+                <p>Услуга ID: {service.service?.id}</p>
+                <p>Название: {service.service?.name}</p>
+                <p>Описание: {service.service?.description}</p>
+                <p>Цена: {service.service?.price}</p>
+                <p>Количество: {service.quantity}</p>
 
-                {/* Добавляем картинку товара */}
                 {service.service?.image_url && (
                   <div>
                     <img

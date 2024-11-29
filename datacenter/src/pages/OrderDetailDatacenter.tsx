@@ -7,6 +7,11 @@ import { Api, DatacenterOrder } from '../api/Api';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css"; 
 import { FaCalendarAlt } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+
+
+
+const defaultImageUrl = '/images/default.png';
 
 const formatTime = (time: Date | null) => {
   if (!time) return 'Не выбрано';
@@ -90,7 +95,6 @@ const OrderDetailDatacenter = () => {
       return;
     }
 
-    // Сначала обновляем данные заказа (адрес и время)
     try {
       const updatedOrder = {
         ...orderDetails,
@@ -102,7 +106,6 @@ const OrderDetailDatacenter = () => {
         withCredentials: true,
       });
 
-      // После успешного обновления, подтверждаем заказ
       await api.datacenterOrders.datacenterOrdersSubmitUpdate(draftOrderId.toString(), {
         withCredentials: true,
       });
@@ -112,6 +115,49 @@ const OrderDetailDatacenter = () => {
       alert('Заказ успешно обновлен и подтвержден!');
     } catch (err) {
       setError('Ошибка при обновлении или подтверждении заказа');
+      console.error('Ошибка:', err);
+    }
+  };
+
+  const handleDeleteService = async (datacenterServiceId: string) => {
+    if (!draftOrderId) {
+      setError('ID заказа отсутствует.');
+      return;
+    }
+
+    try {
+      // Удаляем товар из заказа
+      await api.datacenterOrdersServices.datacenterOrdersServicesDatacenterServicesDeleteDelete(
+        draftOrderId.toString(),
+        datacenterServiceId,
+        { withCredentials: true }
+      );
+
+      // Обновляем данные заказа после удаления товара
+      const response = await api.datacenterOrders.datacenterOrdersRead(draftOrderId.toString(), {
+        withCredentials: true,
+      });
+
+      // Обновляем состояние с новыми данными
+      const { id, status, creation_date, formation_date, completion_date, creator_name, moderator_name, delivery_address, delivery_time, total_price, datacenters } = response.data;
+      setOrderDetails({
+        id,
+        status,
+        creation_date,
+        formation_date,
+        completion_date,
+        creator_name,
+        moderator_name,
+        delivery_address,
+        delivery_time,
+        total_price,
+        datacenters,
+      });
+
+      setError(null);
+      alert('Товар успешно удален из заказа!');
+    } catch (err) {
+      setError('Ошибка при удалении товара');
       console.error('Ошибка:', err);
     }
   };
@@ -203,15 +249,19 @@ const OrderDetailDatacenter = () => {
                 <p>Цена: {service.service?.price}</p>
                 <p>Количество: {service.quantity}</p>
 
-                {service.service?.image_url && (
-                  <div>
-                    <img
-                      src={service.service.image_url}
-                      alt={service.service.name}
-                      style={{ maxWidth: '200px', maxHeight: '200px', objectFit: 'contain' }}
-                    />
-                  </div>
-                )}
+                <div>
+                  <img
+                    src={service.service?.image_url || defaultImageUrl} 
+                    alt={service.service?.name}
+                    style={{ maxWidth: '200px', maxHeight: '200px', objectFit: 'contain' }}
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = defaultImageUrl; 
+                    }}
+                  />
+                </div>
+
+                <button onClick={() => handleDeleteService(service.service?.id?.toString() || '')}>Удалить</button>
               </div>
             ))
           ) : (

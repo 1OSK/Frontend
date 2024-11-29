@@ -99,14 +99,24 @@ export const EquipmentListDatacenter: React.FC = () => {
         <Breadcrumb items={breadcrumbItems} />
 
         <div className="order-info">
-          <Button
-            className="current-order-button"
-            style={{ backgroundColor: '#3faf4a' }}
-            disabled={datacentersCount === 0} // Используем datacenters_count
-          >
-            Оформить заказ {datacentersCount > 0 ? `(${datacentersCount} товаров)` : ''}
-          </Button>
-        </div>
+      {error && <Alert variant="danger">{error}</Alert>}
+
+      {!isAuthenticated ? (
+        <p>Войдите для формирования заказа</p> // Сообщение для неавторизованных пользователей
+      ) : (
+        <Button
+          className="current-order-button"
+          style={{ backgroundColor: '#3faf4a' }}
+          disabled={datacentersCount === 0}
+        >
+          {loading ? (
+            <Spinner animation="border" size="sm" />
+          ) : (
+            `Оформить заказ ${datacentersCount > 0 ? `(${datacentersCount} товаров)` : ''}`
+          )}
+        </Button>
+      )}
+    </div>
 
         <div className="breadcrumb-controls">
           <Form onSubmit={handleSearch}>

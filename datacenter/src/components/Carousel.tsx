@@ -3,7 +3,7 @@ import '../assets/style.css';
 
 const Carousel: React.FC = () => {
     const [index, setIndex] = useState(0);
-    const images = ['https://1osk.github.io/Frontend/images/1.png', 'https://1osk.github.io/Frontend/images/2.png', 'https://1osk.github.io/Frontend/images/3.png', 'https://1osk.github.io/Frontend/images/4.png', 'https://1osk.github.io/Frontend/images/5.png'];
+    const images = ['/images/1.png', '/images/2.png', '/images/3.png', '/images/4.png', '/images/5.png'];
 
     // Индексы левого и правого изображений
     const leftIndex = (index - 1 + images.length) % images.length;

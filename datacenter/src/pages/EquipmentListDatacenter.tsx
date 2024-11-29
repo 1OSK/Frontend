@@ -16,7 +16,6 @@ import { Api } from '../api/Api';
 
 const api = new Api();
 
-
 export const EquipmentListDatacenter: React.FC = () => {
   const dispatch = useDispatch();
   const minPrice = useSelector((state: RootState) => state.ourData.minPrice);
@@ -27,10 +26,7 @@ export const EquipmentListDatacenter: React.FC = () => {
   const [services, setServices] = useState(mockData);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-
-  const [draftOrderId, setDraftOrderId] = useState<string | null>(null);
-const [datacentersCount, setDatacentersCount] = useState<number>(0);
+  const [datacentersCount, setDatacentersCount] = useState<number>(0); // Для хранения количества товаров
 
   const defaultImageUrl = '/images/default.png';
 
@@ -47,48 +43,43 @@ const [datacentersCount, setDatacentersCount] = useState<number>(0);
   const fetchServices = async () => {
     setLoading(true);
     setError(null);
-  
-    let url = '/datacenter-services/';
+
     const params: Record<string, string | number> = {};
-  
     if (minPrice) params.datacenter_min_price = minPrice;
     if (maxPrice) params.datacenter_max_price = maxPrice;
-  
+
     try {
-      const response = await axios.get(url, { params });
-      setServices(response.data.datacenters);
-  
-      // Сохранение данных о заказе (ID заказа и количество товаров)
-      const draftOrderId = response.data.draft_order_id;
-      const datacentersCount = response.data.datacenters_count;
-  
-      // Установка этих данных в состояние компонента
-      setDraftOrderId(draftOrderId);
-      setDatacentersCount(datacentersCount);
+      const response = await axios.get('/datacenter-services/', { params });
+      const { datacenters, datacenters_count } = response.data;
+
+      console.log('Ответ сервера:', response.data);
+
+      setServices(datacenters); // Сохраняем товары
+      setDatacentersCount(datacenters_count); // Сохраняем количество товаров
+
     } catch (err) {
       setError('Ошибка при загрузке данных');
+      console.error('Ошибка:', err);
     } finally {
       setLoading(false);
     }
   };
+
   const handleAddToOrder = async (id: string) => {
-    // Проверяем, что sessionId существует
     if (!sessionId) {
       alert('Пожалуйста, войдите в систему, чтобы добавить товар в заказ');
       return;
     }
-  
-    // Устанавливаем session_id в куки (без HttpOnly)
+
+    // Устанавливаем session_id в куки
     document.cookie = `sessionid=${sessionId}; path=/; SameSite=Strict`;
-  
+
     try {
-      // Добавляем товар в черновик через API, с флагом с withCredentials
-      const response = await api.datacenterServices.datacenterServicesAddToDraftCreate(id, {
-        withCredentials: true, // Передаем куки с запросом
+      await api.datacenterServices.datacenterServicesAddToDraftCreate(id, {
+        withCredentials: true,
       });
-  
-      // Обновляем количество товаров в заказе
-      setDatacentersCount(datacentersCount + 1);
+
+      await fetchServices();
     } catch (error) {
       setError('Ошибка при добавлении товара в заказ');
       console.error('Ошибка при добавлении товара:', error);
@@ -108,21 +99,14 @@ const [datacentersCount, setDatacentersCount] = useState<number>(0);
         <Breadcrumb items={breadcrumbItems} />
 
         <div className="order-info">
-          {isAuthenticated ? (
-            <Button
-              className="current-order-button"
-              style={{ backgroundColor: '#3faf4a' }}
-              disabled={datacentersCount === 0}
-            >
-              Оформить заказ {datacentersCount > 0 ? `(${datacentersCount} товаров)` : ''}
-            </Button>
-          ) : (
-            <span className="current-order-button disabled text-muted">
-              Войдите, чтобы оформить заказ
-            </span>
-          )}
+          <Button
+            className="current-order-button"
+            style={{ backgroundColor: '#3faf4a' }}
+            disabled={datacentersCount === 0} // Используем datacenters_count
+          >
+            Оформить заказ {datacentersCount > 0 ? `(${datacentersCount} товаров)` : ''}
+          </Button>
         </div>
-
 
         <div className="breadcrumb-controls">
           <Form onSubmit={handleSearch}>
@@ -184,7 +168,7 @@ const [datacentersCount, setDatacentersCount] = useState<number>(0);
                         <Button
                           variant="secondary"
                           className="card-button"
-                          onClick={() => handleAddToOrder(service.id.toString())} // Приводим id к строковому типу
+                          onClick={() => handleAddToOrder(service.id.toString())}
                         >
                           Добавить в заказ
                         </Button>

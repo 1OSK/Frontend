@@ -10,7 +10,7 @@ import './assets/style.css'; // Убедитесь, что путь правил
 import './index.css'; // Убедитесь, что путь правильный
 import Login from './pages/Login';
 import Register from './pages/Register'; 
-
+import OrderDetailDatacenter from './pages/OrderDetailDatacenter'; 
 
 // Проверка, чтобы использовать правильный basename для GitHub Pages
 const isGitHubPages = window.location.hostname === '1osk.github.io';
@@ -24,6 +24,7 @@ const router = createBrowserRouter(
     { path: '/datacenter-services/:id', element: <EquipmentDetailDatacenter /> },
     { path: '/login', element: <Login /> },
     { path: '/register', element: <Register /> },
+    { path: '/datacenter-orders/:pk', element: <OrderDetailDatacenter /> },
   ],
   { basename }
 );

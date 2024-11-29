@@ -546,7 +546,20 @@ body {
 
 
 
-
+.order-info .current-order-button .order-link {
+    text-decoration: none;  /* Убирает подчеркивание */
+    color: inherit;         /* Наследует цвет текста от родительского элемента (кнопки) */
+    display: block;         /* Чтобы ссылка заполнила всю кнопку */
+    width: 100%;            /* Заполняет всю ширину кнопки */
+    height: 100%;           /* Заполняет всю высоту кнопки */
+    text-align: center;     /* Центрирует текст по горизонтали */
+    line-height: 36px;      /* Центрирует текст по вертикали (для кнопки высотой 36px) */
+  }
+  
+  .order-info .current-order-button:hover .order-link {
+    text-decoration: none;  /* Убирает подчеркивание при наведении */
+    color: inherit;         /* Сохраняет цвет текста при наведении */
+  }
 
 /* Стиль для кнопки "Оформить заказ", когда она активна */
 .current-order-button {

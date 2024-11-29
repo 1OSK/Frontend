@@ -12,16 +12,25 @@ import { mockData } from '../mock/mockData';
 import Navbar from '../components/Navbar';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
+import { Api } from '../api/Api';
+
+const api = new Api();
+
 
 export const EquipmentListDatacenter: React.FC = () => {
   const dispatch = useDispatch();
   const minPrice = useSelector((state: RootState) => state.ourData.minPrice);
   const maxPrice = useSelector((state: RootState) => state.ourData.maxPrice);
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+  const sessionId = useSelector((state: RootState) => state.auth.sessionId);
 
   const [services, setServices] = useState(mockData);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+
+  const [draftOrderId, setDraftOrderId] = useState<string | null>(null);
+const [datacentersCount, setDatacentersCount] = useState<number>(0);
 
   const defaultImageUrl = '/images/default.png';
 
@@ -38,20 +47,51 @@ export const EquipmentListDatacenter: React.FC = () => {
   const fetchServices = async () => {
     setLoading(true);
     setError(null);
-
+  
     let url = '/datacenter-services/';
     const params: Record<string, string | number> = {};
-
+  
     if (minPrice) params.datacenter_min_price = minPrice;
     if (maxPrice) params.datacenter_max_price = maxPrice;
-
+  
     try {
       const response = await axios.get(url, { params });
       setServices(response.data.datacenters);
+  
+      // Сохранение данных о заказе (ID заказа и количество товаров)
+      const draftOrderId = response.data.draft_order_id;
+      const datacentersCount = response.data.datacenters_count;
+  
+      // Установка этих данных в состояние компонента
+      setDraftOrderId(draftOrderId);
+      setDatacentersCount(datacentersCount);
     } catch (err) {
       setError('Ошибка при загрузке данных');
     } finally {
       setLoading(false);
+    }
+  };
+  const handleAddToOrder = async (id: string) => {
+    // Проверяем, что sessionId существует
+    if (!sessionId) {
+      alert('Пожалуйста, войдите в систему, чтобы добавить товар в заказ');
+      return;
+    }
+  
+    // Устанавливаем session_id в куки (без HttpOnly)
+    document.cookie = `sessionid=${sessionId}; path=/; SameSite=Strict`;
+  
+    try {
+      // Добавляем товар в черновик через API, с флагом с withCredentials
+      const response = await api.datacenterServices.datacenterServicesAddToDraftCreate(id, {
+        withCredentials: true, // Передаем куки с запросом
+      });
+  
+      // Обновляем количество товаров в заказе
+      setDatacentersCount(datacentersCount + 1);
+    } catch (error) {
+      setError('Ошибка при добавлении товара в заказ');
+      console.error('Ошибка при добавлении товара:', error);
     }
   };
 
@@ -68,13 +108,21 @@ export const EquipmentListDatacenter: React.FC = () => {
         <Breadcrumb items={breadcrumbItems} />
 
         <div className="order-info">
-          <span
-            className={`current-order-button ${isAuthenticated ? '' : 'disabled text-muted'}`}
-            style={isAuthenticated ? {  } : {}}
-          >
-            {isAuthenticated ? 'Оформить заказ' : 'Войдите, чтобы оформить заказ'}
-          </span>
+          {isAuthenticated ? (
+            <Button
+              className="current-order-button"
+              style={{ backgroundColor: '#3faf4a' }}
+              disabled={datacentersCount === 0}
+            >
+              Оформить заказ {datacentersCount > 0 ? `(${datacentersCount} товаров)` : ''}
+            </Button>
+          ) : (
+            <span className="current-order-button disabled text-muted">
+              Войдите, чтобы оформить заказ
+            </span>
+          )}
         </div>
+
 
         <div className="breadcrumb-controls">
           <Form onSubmit={handleSearch}>
@@ -133,7 +181,11 @@ export const EquipmentListDatacenter: React.FC = () => {
                     </Link>
                     {isAuthenticated && (
                       <div className="add-button-container">
-                        <Button variant="secondary" className="card-button">
+                        <Button
+                          variant="secondary"
+                          className="card-button"
+                          onClick={() => handleAddToOrder(service.id.toString())} // Приводим id к строковому типу
+                        >
                           Добавить в заказ
                         </Button>
                       </div>

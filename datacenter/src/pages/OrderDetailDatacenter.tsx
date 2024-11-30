@@ -11,7 +11,10 @@ import { handleSubmitOrder } from '../orderMethods/handleSubmitOrder';
 import { handleDeleteService } from '../orderMethods/handleDeleteService';
 import { handleQuantityChange } from '../orderMethods/handleQuantityChange';
 import { fetchOrderDetails } from '../orderMethods/fetchOrderDetails'; 
+import { loadOrders } from '../orderMethods/loadOrders'; 
 const defaultImageUrl = '/images/default.png';
+
+
 
 const formatTime = (time: Date | string | null) => {
     if (!time) return 'Не выбрано';
@@ -37,6 +40,8 @@ const OrderDetailDatacenter = () => {
   const draftOrderId = useSelector((state: RootState) => state.ourData.draftOrderId);
 
 
+  const [isFromBurger, setIsFromBurger] = useState(false);
+
   const [orders, setOrders] = useState<DatacenterOrder[]>([]);
   const [orderDetails, setOrderDetails] = useState<DatacenterOrder | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -47,10 +52,27 @@ const OrderDetailDatacenter = () => {
 
   const api = new Api();
 
+  // Используем useEffect для определения, пришли ли из бургера
   useEffect(() => {
-    if (sessionId && draftOrderId) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const fromBurger = urlParams.get('fromBurger'); // Получаем параметр из URL
+    if (fromBurger === 'true') {
+      setIsFromBurger(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (sessionId) {
+      loadOrders(sessionId, setOrders, setError, setLoading);
+    } else {
+      setError('Необходимо авторизоваться');
+    }
+  }, [sessionId]);
+
+  useEffect(() => {
+    if (sessionId && draftOrderId && draftOrderId !== null && !isFromBurger) {
       fetchOrderDetails(
-        sessionId, // Теперь sessionId точно string
+        sessionId,
         draftOrderId.toString(),
         setLoading,
         setError,
@@ -58,20 +80,9 @@ const OrderDetailDatacenter = () => {
         setDeliveryAddress,
         setDeliveryTime
       );
-      
-    } else {
-      setError('Необходимо авторизоваться и получить ID заказа.');
     }
-  }, [sessionId, draftOrderId]);
+  }, [sessionId, draftOrderId, isFromBurger]);
 
-  
-
-  useEffect(() => {
-    if (sessionId) {
-      loadOrders(sessionId);
-    }
-  }, [sessionId]);
-  
   const onSubmit = async () => {
     if (draftOrderId === null) {
       setError('ID заказа не может быть пустым');
@@ -105,69 +116,20 @@ const OrderDetailDatacenter = () => {
 
 
 
-  const loadOrders = async (sessionId: string | undefined) => {
-    if (!sessionId) {
-      setError('Необходимо авторизоваться');
-      return;
-    }
-  
-    setLoading(true);
-    setError(null);
-  
-    try {
-      // Устанавливаем sessionId в куки
-      document.cookie = `sessionid=${sessionId}; path=/`; // Сохраняем sessionId в куки для передачи с запросом
-  
-      // Параметры запроса
-      const queryParams = {
-        datacenter_status: '', // Фильтр по статусу
-        datacenter_start_date: '', // Начальная дата
-        datacenter_end_date: '',   // Конечная дата
-      };
-  
-      // Загружаем список всех заказов с параметрами фильтрации
-      const response = await api.datacenterOrders.datacenterOrdersList(queryParams, {
-        withCredentials: true,  // Указываем, что сессия (куки) передается с запросом
-      });
-  
-      // Логируем полный ответ от API
-      console.log('Полученный ответ от API:', response);
-  
-      // Проверка, что данные есть
-      if (!response.data || response.data.length === 0) {
-        setError('Нет данных по заказам');
-        return;
-      }
-  
-      // Просто передаем данные как есть, используя типы из интерфейсов
-      const ordersData: DatacenterOrder[] = response.data;
-  
-      // Логируем, как выглядит data после преобразования
-      console.log('Полученные данные заказов:', ordersData);
-  
-      setOrders(ordersData);  // Сохраняем данные в состояние
-    } catch (err) {
-      setError('Ошибка при загрузке списка заказов');
-      console.error('Ошибка загрузки:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <div>
       <Navbar />
       <Breadcrumb 
         items={[
           { label: "Главная", path: "/" },
-          { label: "Услуги дата-центра", path: "/datacenter-services" },
+          { label: "Список товаров", path: "/datacenter-services" },
           { label: `Заказ #${draftOrderId}`, path: `/datacenter-orders/${draftOrderId}` }
         ]}
       />
 
       {loading && <div>Загрузка...</div>}
       {error && <div className="error-message">{error}</div>}
-      {(!orderDetails || error) && !loading && <div>Данные заказа недоступны</div>}
+      {(!orderDetails || error) && !loading }
       <h3>Список заказов:</h3>
 {orders.length > 0 ? (
   <ul>
@@ -219,7 +181,7 @@ const OrderDetailDatacenter = () => {
 ) : (
   <p>Заказы отсутствуют</p>
 )}
-      {orderDetails && !loading && !error && (
+      {draftOrderId !== null && orderDetails && !loading && !error && !isFromBurger &&  (
         <div>
           <h1>Детали заказа</h1>
           <div>

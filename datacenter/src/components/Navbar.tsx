@@ -9,7 +9,11 @@ import { RequestParams } from '../api/Api'; // Импорт RequestParams
 
 const Navbar = () => {
   const [menuActive, setMenuActive] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  // Получаем draftOrderId из Redux
+  const draftOrderId = useSelector((state: RootState) => state.ourData.draftOrderId);
+  
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated); // Проверяем аутентификацию
   const username = useSelector((state: RootState) => state.auth.user?.username); // Получаем имя пользователя
   const sessionId = useSelector((state: RootState) => state.auth.sessionId); // Получаем sessionId
@@ -18,7 +22,7 @@ const Navbar = () => {
 
   // Удаляем sessionId из куки
   const deleteSessionCookie = () => {
-    document.cookie = `sessionid=${sessionId}; path=/; SameSite=Strict`;
+    document.cookie = `sessionid=${sessionId}; path=/; SameSite=Strict; Secure; HttpOnly`;
   };
 
   // Обработчик открытия/закрытия меню
@@ -29,18 +33,15 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       if (!sessionId) {
-        alert("Не найден session_id. Пожалуйста, войдите снова.");
+        setErrorMessage("Не найден session_id. Пожалуйста, войдите снова.");
         return;
       }
-  
-      // Устанавливаем session_id в куки (без HttpOnly)
-      document.cookie = `sessionid=${sessionId}; path=/; SameSite=Strict`;
-  
+
       // Запрос на выход из системы
       const response = await api.users.usersLogoutCreate({
         withCredentials: true, // Передаем куки с запросом
       } as RequestParams);
-  
+
       if (response && response.status === 200) {
         // Удаляем куки после успешного выхода
         deleteSessionCookie();
@@ -51,7 +52,7 @@ const Navbar = () => {
       }
     } catch (err) {
       console.error("Ошибка при выходе:", err);
-      alert("Ошибка при выходе. Попробуйте позже.");
+      setErrorMessage("Ошибка при выходе. Попробуйте позже.");
     }
   };
 
@@ -66,17 +67,17 @@ const Navbar = () => {
       </div>
 
       <div className={`nav-links ${menuActive ? 'active' : ''}`}>
-        {/* Список услуг доступен всегда */}
         <Link to="/datacenter-services/" className="nav-link">Список товаров</Link>
+        
+        {/* Используем draftOrderId в ссылке */}
+        <Link to={`/datacenter-orders/${draftOrderId}?fromBurger=true`} className="nav-link">Мои Заказы</Link>
 
         {!isAuthenticated ? (
-          // Если пользователь не вошел, показываем кнопки "Вход" и "Регистрация"
           <>
             <Link to="/login" className="nav-link">Вход</Link>
             <Link to="/register" className="nav-link">Регистрация</Link>
           </>
         ) : (
-          // Если пользователь вошел, показываем его логин и кнопку "Выйти"
           <>
             <span className="nav-link username">{username}</span>
             <button onClick={handleLogout} className="nav-link logout-btn">
@@ -85,6 +86,8 @@ const Navbar = () => {
           </>
         )}
       </div>
+
+      {errorMessage && <div className="error-message">{errorMessage}</div>}
     </nav>
   );
 };

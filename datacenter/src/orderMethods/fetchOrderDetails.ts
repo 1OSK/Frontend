@@ -47,7 +47,7 @@ export const fetchOrderDetails = async (
     setDeliveryAddress(delivery_address || '');
     setDeliveryTime(delivery_time ? new Date(delivery_time) : null);
   } catch (err) {
-    setError('Ошибка при загрузке данных заказа');
+    
     console.error('Ошибка:', err);
   } finally {
     setLoading(false);

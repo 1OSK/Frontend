@@ -42,7 +42,7 @@ export const handleDeleteService = async (
     });
 
     setError(null);
-    alert('Товар успешно удален из заказа!');
+    
   } catch (err) {
     setError('Ошибка при удалении товара');
     console.error('Ошибка:', err);

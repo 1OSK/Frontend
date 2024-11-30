@@ -47,7 +47,7 @@ export const handleSubmitOrder = async (
     setOrderDetails(response.data);
 
     setError(null);
-    alert('Заказ успешно обновлен и подтвержден!');
+    
   } catch (err) {
     setError('Ошибка при обновлении или подтверждении заказа');
     console.error('Ошибка:', err);

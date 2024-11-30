@@ -890,11 +890,13 @@ body {
   }
   
   .quantity-input-field {
-    width: 120px; /* Устанавливаем фиксированную ширину */
+    width: 120px; /* Ширина поля */
     padding: 5px;
     font-size: 14px;
     border: 1px solid #ddd;
     border-radius: 5px;
+    color: #fff; /* Белый цвет текста */
+    background-color: #333; /* Темный фон для контраста */
   }
   
   .update-quantity-btn {
@@ -1134,12 +1136,10 @@ body {
   }
   
   .address-input-field {
+    color: white; /* Устанавливаем белый цвет текста */
+    background-color: #333; /* Можно также изменить фон, чтобы был контраст с белым текстом */
     padding: 10px;
     font-size: 16px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    width: 20%; /* Уменьшаем ширину поля */
-    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
   }
-  
-

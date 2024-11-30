@@ -37,7 +37,7 @@ export const handleQuantityChange = async (
 
     setOrderDetails(response.data);
     setError(null);
-    alert('Количество товара успешно обновлено!');
+    
   } catch (err) {
     setError('Ошибка при обновлении количества товара');
     console.error('Ошибка:', err);

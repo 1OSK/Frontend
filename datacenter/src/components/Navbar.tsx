@@ -33,15 +33,18 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       if (!sessionId) {
-        setErrorMessage("Не найден session_id. Пожалуйста, войдите снова.");
+        alert("Не найден session_id. Пожалуйста, войдите снова.");
         return;
       }
-
+  
+      // Устанавливаем session_id в куки (без HttpOnly)
+      document.cookie = `sessionid=${sessionId}; path=/; SameSite=Strict`;
+  
       // Запрос на выход из системы
       const response = await api.users.usersLogoutCreate({
         withCredentials: true, // Передаем куки с запросом
       } as RequestParams);
-
+  
       if (response && response.status === 200) {
         // Удаляем куки после успешного выхода
         deleteSessionCookie();
@@ -52,9 +55,10 @@ const Navbar = () => {
       }
     } catch (err) {
       console.error("Ошибка при выходе:", err);
-      setErrorMessage("Ошибка при выходе. Попробуйте позже.");
+      alert("Ошибка при выходе. Попробуйте позже.");
     }
   };
+
 
   return (
     <nav className="navigation-bar mb-0">

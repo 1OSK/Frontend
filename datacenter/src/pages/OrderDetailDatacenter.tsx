@@ -40,8 +40,8 @@ const OrderDetailDatacenter = () => {
   const [error, setError] = useState<string | null>(null);
   const [deliveryAddress, setDeliveryAddress] = useState<string>('');
   const [deliveryTime, setDeliveryTime] = useState<Date | null>(null);
-  const [quantity, setQuantity] = useState<number | null>(null);
-
+  
+  const [quantities, setQuantities] = useState<number[]>([]);
   // Типизированное состояние для expandedOrders
   const [expandedOrders, setExpandedOrders] = useState<{ [key: string]: boolean }>({});
 
@@ -156,8 +156,7 @@ const OrderDetailDatacenter = () => {
           src={service.service?.image_url || defaultImageUrl}
           alt={service.service?.name}
           onError={(e) => {
-            const target = e.target as HTMLImageElement;
-            target.src = defaultImageUrl;
+            (e.target as HTMLImageElement).src = defaultImageUrl;
           }}
         />
       </div>
@@ -169,18 +168,28 @@ const OrderDetailDatacenter = () => {
       <p className="service-item-quantity">Количество: {service.quantity}</p>
 
       {/* Поле ввода для изменения количества */}
-      <div className="quantity-edit">
+<div className="quantity-edit">
   <input
     className="quantity-input-field"
     type="number"
-    value={quantity || ''}
+    value={quantities[index] || ''}
     min="1"
-    onChange={(e) => setQuantity(Number(e.target.value))}
+    onChange={(e) => {
+      // Создаем новый массив и обновляем количество для текущего индекса
+      const newQuantities = [...quantities];
+      newQuantities[index] = Number(e.target.value);
+      setQuantities(newQuantities); // Обновляем состояние
+    }}
     placeholder="Новое кол-во"
   />
   <button
     className="update-quantity-btn"
-    onClick={() => onQuantityChange(service.service?.id?.toString() || '', quantity || 1)}
+    onClick={() =>
+      onQuantityChange(
+        service.service?.id?.toString() || '',
+        quantities[index] || 1
+      )
+    }
   >
     Обновить
   </button>

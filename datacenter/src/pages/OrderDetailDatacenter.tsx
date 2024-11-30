@@ -7,8 +7,10 @@ import { Api, DatacenterOrder } from '../api/Api';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css"; 
 import { FaCalendarAlt } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
-
+import { handleSubmitOrder } from '../orderMethods/handleSubmitOrder';
+import { handleDeleteService } from '../orderMethods/handleDeleteService';
+import { handleQuantityChange } from '../orderMethods/handleQuantityChange';
+import { fetchOrderDetails } from '../orderMethods/fetchOrderDetails'; 
 const defaultImageUrl = '/images/default.png';
 
 const formatTime = (time: Date | string | null) => {
@@ -34,6 +36,8 @@ const OrderDetailDatacenter = () => {
   const sessionId = useSelector((state: RootState) => state.auth.sessionId);
   const draftOrderId = useSelector((state: RootState) => state.ourData.draftOrderId);
 
+
+  const [orders, setOrders] = useState<DatacenterOrder[]>([]);
   const [orderDetails, setOrderDetails] = useState<DatacenterOrder | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -44,174 +48,74 @@ const OrderDetailDatacenter = () => {
   const api = new Api();
 
   useEffect(() => {
-    if (!sessionId || !draftOrderId) {
+    if (sessionId && draftOrderId) {
+      fetchOrderDetails(
+        sessionId, // Теперь sessionId точно string
+        draftOrderId.toString(),
+        setLoading,
+        setError,
+        setOrderDetails,
+        setDeliveryAddress,
+        setDeliveryTime
+      );
+    } else {
       setError('Необходимо авторизоваться и получить ID заказа.');
-      return;
     }
-
-    const fetchOrderDetails = async () => {
-      setLoading(true);
-      setError(null);
-
-      try {
-        document.cookie = `sessionid=${sessionId}; path=/; SameSite=Strict`;
-
-        const response = await api.datacenterOrders.datacenterOrdersRead(draftOrderId.toString(), {
-          withCredentials: true,
-        });
-
-        const { id, status, creation_date, formation_date, completion_date, creator_name, moderator_name, delivery_address, delivery_time, total_price, datacenters } = response.data;
-
-        setOrderDetails({
-          id,
-          status,
-          creation_date,
-          formation_date,
-          completion_date,
-          creator_name,
-          moderator_name,
-          delivery_address,
-          delivery_time,
-          total_price,
-          datacenters,
-        });
-
-        setDeliveryAddress(delivery_address || '');
-        setDeliveryTime(delivery_time ? new Date(delivery_time) : null);
-      } catch (err) {
-        setError('Ошибка при загрузке данных заказа');
-        console.error('Ошибка:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchOrderDetails();
   }, [sessionId, draftOrderId]);
 
-  const handleSubmitOrder = async () => {
-    if (!draftOrderId) {
-      setError('ID заказа отсутствует.');
-      return;
-    }
-  
-    if (!deliveryAddress || !deliveryTime) {
-      setError('Пожалуйста, заполните все поля: адрес и время доставки.');
-      return;
-    }
-  
-    try {
-      // Создаем объект для обновления данных заказа
-      const updatedOrder = {
-        ...orderDetails,
-        delivery_address: deliveryAddress ? deliveryAddress : null,
-        delivery_time: deliveryTime ? deliveryTime.toISOString() : null,
-      };
-  
-      // Обновляем заказ
-      const responseUpdate = await api.datacenterOrders.datacenterOrdersUpdateUpdate(draftOrderId.toString(), updatedOrder, {
-        withCredentials: true,
-      });
-  
-      // Подтверждаем заказ
-      const responseSubmit = await api.datacenterOrders.datacenterOrdersSubmitUpdate(draftOrderId.toString(), {
-        withCredentials: true,
-      });
-  
-      // После успешного обновления и подтверждения, получаем актуальные данные заказа
-      const response = await api.datacenterOrders.datacenterOrdersRead(draftOrderId.toString(), {
-        withCredentials: true,
-      });
-  
-      // Обновляем состояние с новыми данными заказа
-      setOrderDetails(response.data);  // или response.data, если API возвращает актуальные данные
-  
-      setError(null);
-      alert('Заказ успешно обновлен и подтвержден!');
-    } catch (err) {
-      setError('Ошибка при обновлении или подтверждении заказа');
-      console.error('Ошибка:', err);
-    }
-  };
 
-  const handleDeleteService = async (datacenterServiceId: string) => {
-    if (!draftOrderId) {
-      setError('ID заказа отсутствует.');
-      return;
-    }
-
-    try {
-      // Удаляем товар из заказа
-      await api.datacenterOrdersServices.datacenterOrdersServicesDatacenterServicesDeleteDelete(
-        draftOrderId.toString(),
-        datacenterServiceId,
-        { withCredentials: true }
-      );
-
-      // Обновляем данные заказа после удаления товара
-      const response = await api.datacenterOrders.datacenterOrdersRead(draftOrderId.toString(), {
-        withCredentials: true,
-      });
-
-      const { id, status, creation_date, formation_date, completion_date, creator_name, moderator_name, delivery_address, delivery_time, total_price, datacenters } = response.data;
-      setOrderDetails({
-        id,
-        status,
-        creation_date,
-        formation_date,
-        completion_date,
-        creator_name,
-        moderator_name,
-        delivery_address,
-        delivery_time,
-        datacenters,
-      });
-
-      setError(null);
-      alert('Товар успешно удален из заказа!');
-    } catch (err) {
-      setError('Ошибка при удалении товара');
-      console.error('Ошибка:', err);
-    }
-  };
-
-  const handleQuantityChange = async (datacenterServiceId: string, newQuantity: number) => {
-    if (!datacenterServiceId || newQuantity <= 0) {
-      setError('Количество должно быть больше нуля.');
-      return;
-    }
   
+  const onSubmit = async () => {
     if (draftOrderId === null) {
-      setError('ID заказа отсутствует.');
-      return;  // Выход из функции, если draftOrderId равно null
+      setError('ID заказа не может быть пустым');
+      return;
     }
   
-    try {
-      // Обновляем количество товара через API
-      await api.datacenterOrdersServices.datacenterOrdersServicesDatacenterServicesUpdateUpdate(
-        draftOrderId.toString(),  // Теперь проверяем, что draftOrderId не null
-        datacenterServiceId,
-        { quantity: newQuantity },
-        { withCredentials: true }
-      );
-  
-      // Обновляем данные заказа после изменения количества товара
-      const response = await api.datacenterOrders.datacenterOrdersRead(draftOrderId.toString(), {
-        withCredentials: true,
-      });
-  
-      setOrderDetails(response.data);
-      setError(null);
-      alert('Количество товара успешно обновлено!');
-    } catch (err) {
-      setError('Ошибка при обновлении количества товара');
-      console.error('Ошибка:', err);
-    }
+    await handleSubmitOrder(draftOrderId, deliveryAddress, deliveryTime, orderDetails, setOrderDetails, setError);
   };
+
+  const onDeleteService = async (datacenterServiceId: string) => {
+    if (draftOrderId === null) {
+      setError('ID заказа не может быть пустым');
+      return;
+    }
+    await handleDeleteService(draftOrderId, datacenterServiceId, setOrderDetails, setError);
+  };
+
+  const onQuantityChange = async (datacenterServiceId: string, newQuantity: number) => {
+    if (draftOrderId === null) {
+      setError('ID заказа не может быть пустым');
+      return;
+    }
+  
+    await handleQuantityChange(draftOrderId, datacenterServiceId, newQuantity, setError, setOrderDetails);
+  };
+  
 
   const handleDateChange = (date: Date | null) => {
     setDeliveryTime(date);
   };
+
+
+  const fetchOrders = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      document.cookie = `sessionid=${sessionId}; path=/; SameSite=Strict`;
+
+      // Загружаем список всех заказов
+      const response = await api.datacenterOrders.datacenterOrdersList();
+
+      setOrders(response.data);
+    } catch (err) {
+        setError('Ошибка при загрузке списка заказов');
+      console.error(err);
+    } finally {
+        setLoading(false);
+    }
+  };
+
 
   return (
     <div>
@@ -227,6 +131,19 @@ const OrderDetailDatacenter = () => {
       {loading && <div>Загрузка...</div>}
       {error && <div className="error-message">{error}</div>}
       {(!orderDetails || error) && !loading && <div>Данные заказа недоступны</div>}
+      {orders.length === 0 && !loading && !error && <div>Заказы отсутствуют.</div>}
+      
+      <h2>Список заказов</h2>
+      {orders.length > 0 && (
+        <ul>
+          {orders.map((order) => (
+            <li key={order.id}>
+              <a href={`/datacenter-orders/${order.id}`}>Заказ #{order.id}</a> - Статус: {order.status}
+            </li>
+          ))}
+        </ul>
+      )}
+
 
       {orderDetails && !loading && !error && (
         <div>
@@ -283,7 +200,7 @@ const OrderDetailDatacenter = () => {
               <strong>Выбранное время:</strong> {formatTime(deliveryTime)}
             </div>
             <br />
-            <button onClick={handleSubmitOrder}>Подтвердить заказ</button>
+            <button onClick={onSubmit}>Подтвердить заказ</button>
           </div>
 
           <h2>Услуги</h2>
@@ -317,9 +234,9 @@ const OrderDetailDatacenter = () => {
                     onChange={(e) => setQuantity(Number(e.target.value))}
                   />
                 </label>
-                <button onClick={() => handleQuantityChange(service.service?.id?.toString() || '', quantity || 1)}>Обновить количество</button>
+                <button onClick={() => onQuantityChange(service.service?.id?.toString() || '', quantity || 1)}>Обновить количество</button>
 
-                <button onClick={() => handleDeleteService(service.service?.id?.toString() || '')}>Удалить</button>
+                <button onClick={() => onDeleteService(service.service?.id?.toString() || '')}>Удалить</button>
               </div>
             ))
           ) : (

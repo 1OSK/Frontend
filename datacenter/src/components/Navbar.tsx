@@ -69,8 +69,10 @@ const Navbar = () => {
       <div className={`nav-links ${menuActive ? 'active' : ''}`}>
         <Link to="/datacenter-services/" className="nav-link">Список товаров</Link>
         
-        {/* Используем draftOrderId в ссылке */}
-        <Link to={`/datacenter-orders/${draftOrderId}?fromBurger=true`} className="nav-link">Мои Заказы</Link>
+        {/* Ссылка "Мои Заказы" доступна только для авторизованных пользователей */}
+        {isAuthenticated &&  (
+          <Link to={`/datacenter-orders/${draftOrderId}?fromBurger=true`} className="nav-link">Мои Заказы</Link>
+        )}
 
         {!isAuthenticated ? (
           <>

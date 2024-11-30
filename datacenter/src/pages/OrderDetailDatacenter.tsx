@@ -126,61 +126,6 @@ const OrderDetailDatacenter = () => {
           { label: `Заказ #${draftOrderId}`, path: `/datacenter-orders/${draftOrderId}` }
         ]}
       />
-
-      {loading && <div>Загрузка...</div>}
-      {error && <div className="error-message">{error}</div>}
-      {(!orderDetails || error) && !loading }
-      <h3>Список заказов:</h3>
-{orders.length > 0 ? (
-  <ul>
-    {orders.map((order) => (
-      <li key={order.id}>
-        {/* Отображаем общую информацию о заказе */}
-        <p>Заказ #{order.id}</p>
-        <p>Статус: {order.status}</p>
-        <p>Дата создания: {formatTime(order.creation_date || null)}</p>
-        {order.formation_date && <p>Дата формирования: {formatTime(order.formation_date)}</p>}
-        {order.completion_date && <p>Дата завершения: {formatTime(order.completion_date)}</p>}
-        <p>Адрес доставки: {order.delivery_address || 'Не указан'}</p>
-        <p>Время доставки: {order.delivery_time || 'Не указано'}</p>
-        <p>Сумма: {order.total_price !== undefined ? order.total_price : 'Не указана'}</p>
-
-        {/* Отображаем товары (услуги) в заказе */}
-        <h4>Услуги в заказе:</h4>
-        {order.datacenters && order.datacenters.length > 0 ? (
-          <ul>
-            {order.datacenters.map((datacenter: DatacenterOrderService, index) => (
-              <li key={index}>
-                {/* Информация о каждой услуге */}
-                <p>Услуга: {datacenter.service?.name || 'Не указано'}</p>
-                <p>Описание: {datacenter.service?.description || 'Не указано'}</p>
-                <p>Цена: {datacenter.service?.price || 'Не указана'}</p>
-                <p>Количество: {datacenter.quantity || 'Не указано'}</p>
-
-                {/* Проверка на изображение */}
-                <div>
-                  <img
-                    src={datacenter.service?.image_url || defaultImageUrl}  // Используем defaultImageUrl, если нет изображения
-                    alt={datacenter.service?.name || 'Услуга'}
-                    style={{ maxWidth: '200px', maxHeight: '200px', objectFit: 'contain' }}
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = defaultImageUrl;  // В случае ошибки показываем дефолтное изображение
-                    }}
-                  />
-                </div>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>Нет услуг в заказе</p>
-        )}
-      </li>
-    ))}
-  </ul>
-) : (
-  <p>Заказы отсутствуют</p>
-)}
       {draftOrderId !== null && orderDetails && !loading && !error && !isFromBurger &&  (
         <div>
           <h1>Детали заказа</h1>
@@ -280,6 +225,61 @@ const OrderDetailDatacenter = () => {
           )}
         </div>
       )}
+      {loading && <div>Загрузка...</div>}
+      {error && <div className="error-message">{error}</div>}
+      {(!orderDetails || error) && !loading }
+      <h3>Список заказов:</h3>
+{orders.length > 0 ? (
+  <ul>
+    {orders.map((order) => (
+      <li key={order.id}>
+        {/* Отображаем общую информацию о заказе */}
+        <p>Заказ #{order.id}</p>
+        <p>Статус: {order.status}</p>
+        <p>Дата создания: {formatTime(order.creation_date || null)}</p>
+        {order.formation_date && <p>Дата формирования: {formatTime(order.formation_date)}</p>}
+        {order.completion_date && <p>Дата завершения: {formatTime(order.completion_date)}</p>}
+        <p>Адрес доставки: {order.delivery_address || 'Не указан'}</p>
+        <p>Время доставки: {order.delivery_time || 'Не указано'}</p>
+        <p>Сумма: {order.total_price !== undefined ? order.total_price : 'Не указана'}</p>
+
+        {/* Отображаем товары (услуги) в заказе */}
+        <h4>Услуги в заказе:</h4>
+        {order.datacenters && order.datacenters.length > 0 ? (
+          <ul>
+            {order.datacenters.map((datacenter: DatacenterOrderService, index) => (
+              <li key={index}>
+                {/* Информация о каждой услуге */}
+                <p>Услуга: {datacenter.service?.name || 'Не указано'}</p>
+                <p>Описание: {datacenter.service?.description || 'Не указано'}</p>
+                <p>Цена: {datacenter.service?.price || 'Не указана'}</p>
+                <p>Количество: {datacenter.quantity || 'Не указано'}</p>
+
+                {/* Проверка на изображение */}
+                <div>
+                  <img
+                    src={datacenter.service?.image_url || defaultImageUrl}  // Используем defaultImageUrl, если нет изображения
+                    alt={datacenter.service?.name || 'Услуга'}
+                    style={{ maxWidth: '200px', maxHeight: '200px', objectFit: 'contain' }}
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = defaultImageUrl;  // В случае ошибки показываем дефолтное изображение
+                    }}
+                  />
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>Нет услуг в заказе</p>
+        )}
+      </li>
+    ))}
+  </ul>
+) : (
+  <p>Заказы отсутствуют</p>
+)}
+
     </div>
   );
 };

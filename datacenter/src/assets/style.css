@@ -140,6 +140,7 @@
 }
 
 .button-container {
+    
     display: flex;
     flex-direction: column; /* Размещает кнопки друг под другом */
     margin-left: auto; /* Сместить контейнер кнопок вправо */
@@ -766,21 +767,379 @@ body {
 
 
 
-
-
-
-
-  /* Стили для страницы входа */
-.login-container {
-    width: 100%;
-    max-width: 450px;
-    margin: 50px auto;
-    padding: 40px;
-    background-color: #ffffff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+/* Общие стили для элементов */
+.border-radius {
     border-radius: 8px;
+  }
+  
+  .margin-bottom-10 {
+    margin-bottom: 10px;
+  }
+  
+  .margin-bottom-20 {
+    margin-bottom: 20px;
+  }
+  
+  .padding-10-20 {
+    padding: 10px 20px;
+  }
+  
+  .font-size-16 {
+    font-size: 16px;
+  }
+  
+  .font-size-14 {
+    font-size: 14px;
+  }
+  
+  .font-size-20 {
+    font-size: 20px;
+  }
+  
+  .font-size-24 {
+    font-size: 24px;
+  }
+  
+  .text-center {
     text-align: center;
+  }
+  
+  .flex-column {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .flex-row {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .align-items-start {
+    align-items: flex-start;
+  }
+  
+  .align-items-center {
+    align-items: center;
+  }
+  
+  /* Контейнер для услуги */
+
+
+
+
+
+
+  
+
+  
+  .address-label,
+  .time-label {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  
+
+  
+/* Контейнер строки услуги */
+.service-item-row {
+    display: flex;
+    align-items: center; /* Выравниваем элементы по центру вертикально */
+    justify-content: space-between; /* Пробел между элементами */
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+  }
+  
+  /* Картинка услуги */
+  .service-image-wrapper {
+    flex: 0 0 100px; /* Фиксированная ширина для изображения */
+    text-align: center;
+  }
+  
+  .service-item-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+  }
+  
+  /* Название услуги */
+  .service-item-name {
+    flex: 1;
+    margin: 0 15px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  /* Количество услуги */
+  .service-item-quantity {
+    flex: 0 0 150px; /* Фиксированное место для текста количества */
+    font-size: 16px;
+    text-align: center;
+    color: #666;
+  }
+  
+  .quantity-edit {
+    display: flex; /* Выстраиваем элементы в строку */
+    align-items: center; /* Выравниваем элементы по вертикали */
+    gap: 10px; /* Расстояние между полем ввода и кнопкой */
+  }
+  
+  .quantity-input-field {
+    width: 120px; /* Устанавливаем фиксированную ширину */
+    padding: 5px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .update-quantity-btn {
+    padding: 5px 10px;
+    background-color: #3faf4a;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-left: 10px; /* Отступ слева от кнопки */
+  }
+  
+  .delete-service-btn {
+    padding: 5px 10px;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-left: 10px; /* Отступ слева от кнопки */
+  }
+  
+
+  
+
+  
+  .confirm-order-btn {
+    background-color: #3faf4a;
+    color: white;
+    padding: 10px 15px; /* Горизонтальные отступы для уменьшения ширины кнопки */
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 200px; /* Фиксированная ширина */
+    display: block; /* Делаем кнопку блочным элементом */
+    margin: 20px auto 0; /* Центрируем кнопку по горизонтали и добавляем отступ сверху */
+    text-align: center; /* Текст по центру */
+  }
+  
+  .confirm-order-btn:hover {
+    background-color: #328f3d;
+  }
+  
+  /* Общие стили контейнеров */
+  .order-detail-container {
+    padding: 20px;
+    background-color: #f4f7fa;
+    border-radius: 8px;
+  }
+  
+  .order-details-header,
+  .order-list-header {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 15px;
+  }
+  
+  .order-info {
+    margin-bottom: 20px;
+  }
+  
+  .order-info-item {
+    font-size: 16px;
+    margin-bottom: 5px;
+  }
+  
+  .order-edit-form {
+    margin-top: 15px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+
+  
+  .input-field {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .datepicker-container {
+    display: flex;
+    align-items: center;
+  }
+  
+
+  
+  .selected-time {
+    margin-top: 10px;
+  }
+  
+  .submit-button {
+    background-color: #3faf4a;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+  .submit-button:hover {
+    background-color: #328f3d;
+  }
+  
+  /* Стили для таблицы заказов */
+  .order-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .order-table th,
+  .order-table td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+  }
+  
+  .order-table th {
+    background-color: #3faf4a;
+    color: #fff;
+  }
+  
+  /* Стили для строк с услугами */
+  .service-row {
+    background-color: #f9f9f9;
+  }
+  
+  .service-row-cell {
+    padding: 20px;
+    text-align: left;
+    background-color: #f9f9f9;
+    border-top: 1px solid #ddd;
+  }
+  
+  .service-item {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+  }
+  
+  .service-list-item-info {
+    margin-bottom: 8px;
+  }
+  
+  .service-image-container {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .service-list-item-image {
+    max-width: 150px;
+    max-height: 150px;
+    width: auto;
+    height: auto;
+    border-radius: 8px;
+    object-fit: contain;
+    border: 1px solid #ddd;
+    padding: 5px;
+  }
+  
+  .service-list-item-info {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  /* Стили для кнопок Toggle */
+  .toggle-button {
+    padding: 5px 10px;
+    background-color: #3faf4a;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .toggle-button:hover {
+    background-color: #328f3d;
+  }
+  
+  button.toggle-button {
+    background-color: #3faf4a;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+  
+  button.toggle-button:hover {
+    background-color: #328f3d;
   }
 
 
+
+
+
+
+
+
+  /* Общие стили */
+.order-details-edit-header {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+.order-details-edit-form {
+  display: flex;
+  flex-direction: column; /* Элементы будут располагаться вертикально */
+  gap: 15px; /* Пространство между элементами */
+}
+  
+  .input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px; /* Пространство между лейблом и полем ввода */
+  }
+  
+  .input-label {
+    font-size: 16px;
+    margin-bottom: 10px;
+    font-weight: bold;
+  }
+  
+  .address-input-field {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 20%; /* Уменьшаем ширину поля */
+    margin-top: 5px;
+  }
+  
 

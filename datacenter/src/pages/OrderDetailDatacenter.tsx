@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import Navbar from '../components/Navbar';
 import Breadcrumb from '../components/Breadcrumb';
 import { RootState } from '../store';
-import { Api, DatacenterOrder } from '../api/Api';
+import { Api, DatacenterOrder, DatacenterOrderService } from '../api/Api';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css"; 
 import { FaCalendarAlt } from 'react-icons/fa';
@@ -58,12 +58,19 @@ const OrderDetailDatacenter = () => {
         setDeliveryAddress,
         setDeliveryTime
       );
+      
     } else {
       setError('Необходимо авторизоваться и получить ID заказа.');
     }
   }, [sessionId, draftOrderId]);
 
+  
 
+  useEffect(() => {
+    if (sessionId) {
+      loadOrders(sessionId);
+    }
+  }, [sessionId]);
   
   const onSubmit = async () => {
     if (draftOrderId === null) {
@@ -97,25 +104,55 @@ const OrderDetailDatacenter = () => {
   };
 
 
-  const fetchOrders = async () => {
+
+  const loadOrders = async (sessionId: string | undefined) => {
+    if (!sessionId) {
+      setError('Необходимо авторизоваться');
+      return;
+    }
+  
     setLoading(true);
     setError(null);
-
+  
     try {
-      document.cookie = `sessionid=${sessionId}; path=/; SameSite=Strict`;
-
-      // Загружаем список всех заказов
-      const response = await api.datacenterOrders.datacenterOrdersList();
-
-      setOrders(response.data);
+      // Устанавливаем sessionId в куки
+      document.cookie = `sessionid=${sessionId}; path=/`; // Сохраняем sessionId в куки для передачи с запросом
+  
+      // Параметры запроса
+      const queryParams = {
+        datacenter_status: '', // Фильтр по статусу
+        datacenter_start_date: '', // Начальная дата
+        datacenter_end_date: '',   // Конечная дата
+      };
+  
+      // Загружаем список всех заказов с параметрами фильтрации
+      const response = await api.datacenterOrders.datacenterOrdersList(queryParams, {
+        withCredentials: true,  // Указываем, что сессия (куки) передается с запросом
+      });
+  
+      // Логируем полный ответ от API
+      console.log('Полученный ответ от API:', response);
+  
+      // Проверка, что данные есть
+      if (!response.data || response.data.length === 0) {
+        setError('Нет данных по заказам');
+        return;
+      }
+  
+      // Просто передаем данные как есть, используя типы из интерфейсов
+      const ordersData: DatacenterOrder[] = response.data;
+  
+      // Логируем, как выглядит data после преобразования
+      console.log('Полученные данные заказов:', ordersData);
+  
+      setOrders(ordersData);  // Сохраняем данные в состояние
     } catch (err) {
-        setError('Ошибка при загрузке списка заказов');
-      console.error(err);
+      setError('Ошибка при загрузке списка заказов');
+      console.error('Ошибка загрузки:', err);
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   };
-
 
   return (
     <div>
@@ -131,20 +168,57 @@ const OrderDetailDatacenter = () => {
       {loading && <div>Загрузка...</div>}
       {error && <div className="error-message">{error}</div>}
       {(!orderDetails || error) && !loading && <div>Данные заказа недоступны</div>}
-      {orders.length === 0 && !loading && !error && <div>Заказы отсутствуют.</div>}
-      
-      <h2>Список заказов</h2>
-      {orders.length > 0 && (
-        <ul>
-          {orders.map((order) => (
-            <li key={order.id}>
-              <a href={`/datacenter-orders/${order.id}`}>Заказ #{order.id}</a> - Статус: {order.status}
-            </li>
-          ))}
-        </ul>
-      )}
+      <h3>Список заказов:</h3>
+{orders.length > 0 ? (
+  <ul>
+    {orders.map((order) => (
+      <li key={order.id}>
+        {/* Отображаем общую информацию о заказе */}
+        <p>Заказ #{order.id}</p>
+        <p>Статус: {order.status}</p>
+        <p>Дата создания: {formatTime(order.creation_date || null)}</p>
+        {order.formation_date && <p>Дата формирования: {formatTime(order.formation_date)}</p>}
+        {order.completion_date && <p>Дата завершения: {formatTime(order.completion_date)}</p>}
+        <p>Адрес доставки: {order.delivery_address || 'Не указан'}</p>
+        <p>Время доставки: {order.delivery_time || 'Не указано'}</p>
+        <p>Сумма: {order.total_price !== undefined ? order.total_price : 'Не указана'}</p>
 
+        {/* Отображаем товары (услуги) в заказе */}
+        <h4>Услуги в заказе:</h4>
+        {order.datacenters && order.datacenters.length > 0 ? (
+          <ul>
+            {order.datacenters.map((datacenter: DatacenterOrderService, index) => (
+              <li key={index}>
+                {/* Информация о каждой услуге */}
+                <p>Услуга: {datacenter.service?.name || 'Не указано'}</p>
+                <p>Описание: {datacenter.service?.description || 'Не указано'}</p>
+                <p>Цена: {datacenter.service?.price || 'Не указана'}</p>
+                <p>Количество: {datacenter.quantity || 'Не указано'}</p>
 
+                {/* Проверка на изображение */}
+                <div>
+                  <img
+                    src={datacenter.service?.image_url || defaultImageUrl}  // Используем defaultImageUrl, если нет изображения
+                    alt={datacenter.service?.name || 'Услуга'}
+                    style={{ maxWidth: '200px', maxHeight: '200px', objectFit: 'contain' }}
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = defaultImageUrl;  // В случае ошибки показываем дефолтное изображение
+                    }}
+                  />
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>Нет услуг в заказе</p>
+        )}
+      </li>
+    ))}
+  </ul>
+) : (
+  <p>Заказы отсутствуют</p>
+)}
       {orderDetails && !loading && !error && (
         <div>
           <h1>Детали заказа</h1>

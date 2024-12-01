@@ -32,6 +32,7 @@ const formatTime = (time: Date | string | null) => {
 const OrderDetailDatacenter = () => {
   const sessionId = useSelector((state: RootState) => state.auth.sessionId);
   const draftOrderId = useSelector((state: RootState) => state.ourData.draftOrderId);
+  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
   
   const [isFromBurger, setIsFromBurger] = useState(false);
   const [orders, setOrders] = useState<DatacenterOrder[]>([]);
@@ -260,106 +261,114 @@ const OrderDetailDatacenter = () => {
 {loading && <div className="loading-message">Загрузка...</div>}
 {error && <div className="error-message">{error}</div>}
 
-{/* Order List Section */}
-<h3 className="order-list-header">Список заказов:</h3>
-{orders.length > 0 ? (
-  <table className="order-table">
-    <thead>
-      <tr>
-        <th>№ Заказа</th>
-        <th>Статус</th>
-        <th>Дата создания</th>
-        <th>Дата формирования</th>
-        <th>Дата завершения</th>
-        <th>Адрес доставки</th>
-        <th>Время доставки</th>
-        <th>Сумма</th>
-        <th>Услуги</th>
-      </tr>
-    </thead>
-    <tbody>
-      {orders.map((order) => (
-        <>
-          {/* Строка с информацией о заказе */}
-          <tr key={order.id}>
-            <td onClick={() => {
-              if (order.id !== undefined) {
-                handleToggle(order.id);
-              }
-            }} className="order-table-cell clickable">
-              Заказ #{order.id}
-            </td>
-            <td className="order-table-cell">{order.status}</td>
-            <td className="order-table-cell">{formatTime(order.creation_date || null)}</td>
-            <td className="order-table-cell">
-              {order.formation_date ? formatTime(order.formation_date) : 'Не указана'}
-            </td>
-            <td className="order-table-cell">
-              {order.completion_date ? formatTime(order.completion_date) : 'Не указана'}
-            </td>
-            <td className="order-table-cell">{order.delivery_address || 'Не указан'}</td>
-            <td className="order-table-cell">
-              {order.delivery_time ? formatTime(order.delivery_time) : 'Не указана'}
-            </td>
-            <td className="order-table-cell">
-              {order.total_price !== undefined ? order.total_price : 'Не указана'}
-            </td>
-            <td className="order-table-cell">
-              <button
-                className="toggle-button"
-                onClick={() => {
+{/* Проверка авторизации */}
+{!isAuthenticated ? (
+  <div className="unauthorized-message">Пожалуйста, авторизуйтесь, чтобы увидеть заказы.</div>
+) : (
+  <>
+    {/* Order List Section */}
+    <h3 className="order-list-header">Список заказов:</h3>
+    {orders.length > 0 ? (
+      <table className="order-table">
+        <thead>
+          <tr>
+            <th>№ Заказа</th>
+            <th>Статус</th>
+            <th>Дата создания</th>
+            <th>Дата формирования</th>
+            <th>Дата завершения</th>
+            <th>Адрес доставки</th>
+            <th>Время доставки</th>
+            <th>Сумма</th>
+            <th>Услуги</th>
+          </tr>
+        </thead>
+        <tbody>
+          {orders.map((order) => (
+            <>
+              {/* Строка с информацией о заказе */}
+              <tr key={order.id}>
+                <td onClick={() => {
                   if (order.id !== undefined) {
                     handleToggle(order.id);
                   }
-                }}
-              >
-                {order.id !== undefined && expandedOrders[order.id] ? 'Скрыть услуги' : 'Показать товары'}
-              </button>
-            </td>
-          </tr>
+                }} className="order-table-cell clickable">
+                  Заказ #{order.id}
+                </td>
+                <td className="order-table-cell">{order.status}</td>
+                <td className="order-table-cell">{formatTime(order.creation_date || null)}</td>
+                <td className="order-table-cell">
+                  {order.formation_date ? formatTime(order.formation_date) : 'Не указана'}
+                </td>
+                <td className="order-table-cell">
+                  {order.completion_date ? formatTime(order.completion_date) : 'Не указана'}
+                </td>
+                <td className="order-table-cell">{order.delivery_address || 'Не указан'}</td>
+                <td className="order-table-cell">
+                  {order.delivery_time ? formatTime(order.delivery_time) : 'Не указана'}
+                </td>
+                <td className="order-table-cell">
+                  {order.total_price !== undefined ? order.total_price : 'Не указана'}
+                </td>
+                <td className="order-table-cell">
+                  <button
+                    className="toggle-button"
+                    onClick={() => {
+                      if (order.id !== undefined) {
+                        handleToggle(order.id);
+                      }
+                    }}
+                  >
+                    {order.id !== undefined && expandedOrders[order.id] ? 'Скрыть услуги' : 'Показать товары'}
+                  </button>
+                </td>
+              </tr>
 
-         {/* Строки с услугами, которые показываются при клике */}
-{order.id !== undefined && expandedOrders[order.id] && order.datacenters && order.datacenters.length > 0 && (
-  order.datacenters.map((datacenter, index) => (
-    <tr key={`service-${index}-${order.id}`} className="service-row">
-      <td colSpan={9} className="service-row-cell">
-        <div className="service-item">
-          <p className="service-list-item-info">Услуга: {datacenter.service?.name || 'Не указано'}</p>
-          
-          <p className="service-list-item-info">Цена: {datacenter.service?.price || 'Не указана'}</p>
-          <p className="service-list-item-info">Количество: {datacenter.quantity || 'Не указано'}</p>
-          <div className="service-image-container">
-            <img
-              className="service-list-item-image"
-              src={datacenter.service?.image_url || defaultImageUrl}
-              alt={datacenter.service?.name || 'Услуга'}
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.src = defaultImageUrl;
-              }}
-            />
-          </div>
-        </div>
-      </td>
-    </tr>
-  ))
+             {/* Строки с услугами, которые показываются при клике */}
+            {order.id !== undefined && expandedOrders[order.id] && order.datacenters && order.datacenters.length > 0 && (
+              order.datacenters.map((datacenter, index) => (
+                <tr key={`service-${index}-${order.id}`} className="service-row">
+                  <td colSpan={9} className="service-row-cell">
+                    <div className="service-item">
+                      <p className="service-list-item-info">Услуга: {datacenter.service?.name || 'Не указано'}</p>
+                      <p className="service-list-item-info">Цена: {datacenter.service?.price || 'Не указана'}</p>
+                      <p className="service-list-item-info">Количество: {datacenter.quantity || 'Не указано'}</p>
+                      <div className="service-image-container">
+                        <img
+                          className="service-list-item-image"
+                          src={datacenter.service?.image_url || defaultImageUrl}
+                          alt={datacenter.service?.name || 'Услуга'}
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.src = defaultImageUrl;
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
+
+            {/* В случае, если у заказа нет услуг */}
+            {order.id !== undefined && expandedOrders[order.id] && order.datacenters?.length === 0 && (
+              <tr key={`no-services-${order.id}`}>
+                <td colSpan={9} className="service-row-cell">Нет услуг в заказе</td>
+              </tr>
+            )}
+            </>
+          ))}
+        </tbody>
+      </table>
+    ) : (
+      <p>Заказы отсутствуют</p>
+    )}
+  </>
 )}
 
-{/* В случае, если у заказа нет услуг */}
-{order.id !== undefined && expandedOrders[order.id] && order.datacenters?.length === 0 && (
-  <tr key={`no-services-${order.id}`}>
-    <td colSpan={9} className="service-row-cell">Нет услуг в заказе</td>
-  </tr>
-)}
-        </>
-      ))}
-    </tbody>
-  </table>
-) : (
-  <p>Заказы отсутствуют</p>
-)}
     </div>
   );
+  
 };
 
 export default OrderDetailDatacenter;

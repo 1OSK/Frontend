@@ -31,8 +31,10 @@ const dataSlice = createSlice({
       state.draftOrderId = action.payload;
     },
     resetDataState(state) {
-      state.datacentersCount = 0;
-      state.draftOrderId = null;
+      state.minPrice = ''; // Сбрасываем минимальную цену
+      state.maxPrice = ''; // Сбрасываем максимальную цену
+      state.datacentersCount = 0; // Сбрасываем количество дата-центров
+      state.draftOrderId = null; // Сбрасываем ID черновика заказа
     },
   },
 });

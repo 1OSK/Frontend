@@ -43,7 +43,7 @@ const Login = () => {
     <>
       <Navbar />
       <Breadcrumb items={[{ label: "Главная", path: "/" }, { label: "Вход", path: "/login" }]} />
-      <div className="login-container">
+      <div className="register-container">
         <h2>Вход в систему</h2>
         <form onSubmit={handleSubmit}>
           {error && <p className="error-message">{error}</p>}

@@ -6,7 +6,7 @@ import { logout } from '../slices/authSlice';
 import { RootState } from '../store';
 import { Api } from '../api/Api'; // Импорт API для выхода
 import { RequestParams } from '../api/Api'; // Импорт RequestParams
-
+import { resetDataState } from '../slices/dataSlice'; 
 const Navbar = () => {
   const [menuActive, setMenuActive] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -49,6 +49,7 @@ const Navbar = () => {
         // Удаляем куки после успешного выхода
         deleteSessionCookie();
         dispatch(logout()); // Обновляем Redux-состояние
+        dispatch(resetDataState());
         console.log("Выход выполнен успешно");
       } else {
         throw new Error("Ошибка при выходе: неверный ответ от сервера");
@@ -85,7 +86,9 @@ const Navbar = () => {
           </>
         ) : (
           <>
-            <span className="nav-link username">{username}</span>
+            <Link to="/profile" className="nav-link username">
+              {username}
+            </Link>
             <button onClick={handleLogout} className="nav-link logout-btn">
               Выйти
             </button>

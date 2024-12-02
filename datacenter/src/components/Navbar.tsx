@@ -9,7 +9,7 @@ import { RequestParams } from '../api/Api'; // Импорт RequestParams
 import { resetDataState } from '../slices/dataSlice'; 
 const Navbar = () => {
   const [menuActive, setMenuActive] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [errorMessage] = useState<string | null>(null);
 
   // Получаем draftOrderId из Redux
   const draftOrderId = useSelector((state: RootState) => state.ourData.draftOrderId);

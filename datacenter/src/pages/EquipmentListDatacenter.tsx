@@ -118,9 +118,7 @@ export const EquipmentListDatacenter: React.FC = () => {
                   {service.price && <p className="price">{service.price} руб.</p>}
                   <div className="button-container">
                     <Link to={`/datacenter-services/${service.id}/`} className="card-button">Подробнее о комплектующем</Link>
-                    <div className="add-button-container">
-                      <Button variant="secondary" disabled className="card-button disabled">Добавить в заказ</Button>
-                    </div>
+                    
                   </div>
                 </div>
               </div>

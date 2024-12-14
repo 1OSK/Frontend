@@ -457,92 +457,6 @@ body {
 
 
 
-/* Бургер-меню */
-.burger-menu {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 30px; /* Увеличиваем ширину для более выразительного вида */
-    height: 25px; /* Увеличиваем высоту */
-    cursor: pointer;
-    transition: transform 0.3s ease-in-out; /* Плавный переход при изменении */
-    position: relative;
-}
-
-/* Полоски бургер-меню */
-.burger-line {
-    width: 100%;
-    height: 5px; /* Увеличиваем высоту полоски для более заметного эффекта */
-    background-color: #eeeeee; /* Цвет полоски */
-    border-radius: 5px; /* Округлые края для полосок */
-    transition: transform 0.3s ease, opacity 0.3s ease; /* Плавное изменение */
-}
-
-/* Стили для активного состояния бургер-меню */
-.burger-menu.active .burger-line:nth-child(1) {
-    transform: rotate(45deg); /* Первая полоска — угол поворота */
-    transform-origin: 50% 50%; /* Центрируем поворот */
-    background-color: #3faf4a; /* Изменение цвета */
-}
-
-.burger-menu.active .burger-line:nth-child(2) {
-    opacity: 0; /* Скрываем центральную полоску */
-}
-
-.burger-menu.active .burger-line:nth-child(3) {
-    transform: rotate(-45deg); /* Третья полоска — угол поворота */
-    transform-origin: 50% 50%; /* Центрируем поворот */
-    background-color: #3faf4a; /* Изменение цвета */
-}
-
-/* Навигационные ссылки */
-.nav-links {
-    display: none;
-    flex-direction: column;
-    background-color: #111; /* Темный фон */
-    padding: 15px 20px;
-    border-radius: 5px; /* Округление углов */
-    position: absolute;
-    top: 60px;
-    left: 0;
-    width: 100%;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Легкая тень */
-    transition: transform 0.3s ease, opacity 0.3s ease;
-}
-
-/* Показываем меню, когда оно активно */
-.nav-links.active {
-    display: flex;
-    transform: translateY(0); /* Плавное появление */
-    opacity: 1;
-}
-
-/* Стили для ссылок меню */
-.nav-link {
-    color: #fff;
-    padding: 15px 20px;
-    text-decoration: none;
-    font-size: 18px;
-    font-weight: 500;
-    transition: background-color 0.3s ease; /* Плавный переход фона */
-}
-
-.nav-link:hover {
-    background-color: #3faf4a; /* Цвет при наведении */
-    border-radius: 5px;
-}
-
-/* Анимация появления меню */
-@keyframes slide-in {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
 
 
 
@@ -1150,3 +1064,21 @@ body {
 
 
   
+
+
+  .no-blue-link {
+    color: inherit; /* Retains the parent color */
+    text-decoration: none; /* Removes underline */
+  }
+
+  .no-blue-link:hover {
+    color: inherit; /* Prevents color change on hover */
+    text-decoration: none; /* Prevents underline on hover */
+  }
+
+
+
+
+
+
+

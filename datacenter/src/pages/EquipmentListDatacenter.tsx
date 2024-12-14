@@ -7,12 +7,7 @@ import { Link } from 'react-router-dom';
 import Breadcrumb from '../components/Breadcrumb';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
-import {
-  setMinPrice,
-  setMaxPrice,
-  setDatacentersCount,
-  setDraftOrderId,
-} from '../slices/dataSlice';
+import { setMinPrice, setMaxPrice, setDatacentersCount } from '../slices/dataSlice';
 import { mockData } from '../mock/mockData';
 import Navbar from '../components/Navbar';
 import Slider from 'rc-slider';
@@ -28,13 +23,11 @@ export const EquipmentListDatacenter: React.FC = () => {
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
   const sessionId = useSelector((state: RootState) => state.auth.sessionId);
   const datacentersCount = useSelector((state: RootState) => state.ourData.datacentersCount);
-  const draftOrderId = useSelector((state: RootState) => state.ourData.draftOrderId);
 
   const [services, setServices] = useState(mockData);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-
+  const [localDraftOrderId, setLocalDraftOrderId] = useState<string | null>(null); // Локальное состояние для draftOrderId
 
   const defaultImageUrl = '/images/default.png';
 
@@ -43,38 +36,35 @@ export const EquipmentListDatacenter: React.FC = () => {
     { label: 'Список товаров', path: '/datacenter-services' },
   ];
 
-  // Функция для загрузки данных при монтировании
+  // Загрузка данных при монтировании
   useEffect(() => {
     fetchServices();
-  }, [isAuthenticated]);  // Если статус авторизации изменится, перезагрузим данные
+  }, [isAuthenticated]); // Если статус авторизации изменится, перезагрузим данные
 
+  const fetchServices = async () => {
+    setLoading(true);
+    setError(null);
 
+    const params: Record<string, string | number> = {};
+    if (minPrice) params.datacenter_min_price = minPrice;
+    if (maxPrice) params.datacenter_max_price = maxPrice;
 
-const fetchServices = async () => {
-  setLoading(true);
-  setError(null);
+    try {
+      const response = await axios.get('/datacenter-services/', { params });
+      const { datacenters, datacenters_count, draft_order_id } = response.data;
 
-  const params: Record<string, string | number> = {};
-  if (minPrice) params.datacenter_min_price = minPrice;
-  if (maxPrice) params.datacenter_max_price = maxPrice;
+      console.log('Ответ сервера:', response.data);
 
-  try {
-    const response = await axios.get('/datacenter-services/', { params });
-    const { datacenters, datacenters_count, draft_order_id } = response.data; // Извлекаем draft_order_id
-
-    console.log('Ответ сервера:', response.data);
-
-    setServices(datacenters);
-    dispatch(setDatacentersCount(datacenters_count));
-    dispatch(setDraftOrderId(draft_order_id)); 
-
-  } catch (err) {
-    setError('Ошибка при загрузке данных');
-    console.error('Ошибка:', err);
-  } finally {
-    setLoading(false);
-  }
-};
+      setServices(datacenters);
+      dispatch(setDatacentersCount(datacenters_count));
+      setLocalDraftOrderId(draft_order_id); // Сохраняем draftOrderId в локальном состоянии
+    } catch (err) {
+      setError('Ошибка при загрузке данных');
+      console.error('Ошибка:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleAddToOrder = async (id: string) => {
     if (!sessionId) {
@@ -124,8 +114,8 @@ const fetchServices = async () => {
                 <Spinner animation="border" size="sm" />
               ) : (
                 <Link
-                  to={`/datacenter-orders/${draftOrderId}`}
-                  className="order-link"  // Добавьте класс сюда
+                  to={`/datacenter-orders/${localDraftOrderId}`} // Используем локальное состояние
+                  className="order-link"
                 >
                   Оформить заказ {datacentersCount > 0 ? `(${datacentersCount} товаров)` : ''}
                 </Link>

@@ -66,7 +66,7 @@ const OrderListDatacenter = () => {
                                     <th>Адрес доставки</th>
                                     <th>Время доставки</th>
                                     <th>Сумма</th>
-                                    <th>Услуги</th>
+                                    <th>Товары</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -83,7 +83,13 @@ const OrderListDatacenter = () => {
                                             >
                                                 Заказ #{order.id}
                                             </td>
-                                            <td className="order-table-cell">{order.status}</td>
+                                            <td className="order-table-cell">
+                                                {order.status === 'draft' ? 'Черновик' :
+                                                order.status === 'deleted' ? 'Удален' :
+                                                order.status === 'formed' ? 'Сформирован' :
+                                                order.status === 'completed' ? 'Завершен' :
+                                                'Отклонен'}
+                                            </td>
                                             <td className="order-table-cell">{formatTime(order.creation_date || null)}</td>
                                             <td className="order-table-cell">
                                                 {order.formation_date ? formatTime(order.formation_date) : 'Не указана'}
@@ -99,17 +105,17 @@ const OrderListDatacenter = () => {
                                                 {order.total_price !== undefined ? order.total_price : 'Не указана'}
                                             </td>
                                             <td className="order-table-cell">
-                                            <button className="toggle-button">
-                                                <Link to={`/datacenter-orders/${order.id}`} className="link-inside-button no-blue-link">
-                                                    Подробности заказа
-                                                </Link>
+                                                <button className="toggle-button">
+                                                    <Link to={`/datacenter-orders/${order.id}`} className="link-inside-button no-blue-link">
+                                                        Подробности заказа
+                                                    </Link>
                                                 </button>
                                             </td>
                                         </tr>
 
                                         {order.id !== undefined && expandedOrders[order.id] && order.datacenters?.length === 0 && (
                                             <tr key={`no-services-${order.id}`}>
-                                                <td colSpan={9} className="service-row-cell">Нет услуг в заказе</td>
+                                                <td colSpan={9} className="service-row-cell">Нет товаров в заказе</td>
                                             </tr>
                                         )}
                                     </React.Fragment>

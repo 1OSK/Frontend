@@ -111,7 +111,11 @@ const OrderDetailDatacenter = () => {
         <div className="order-details-container">
           <h1 className="order-details-header">Детали заказа</h1>
           <div className="order-details-info">
-            <p className="order-details-info-item">Статус: {orderDetails.status}</p>
+            <p className="order-details-info-item">Статус: {orderDetails.status === 'draft' ? 'Черновик' : 
+              orderDetails.status === 'deleted' ? 'Удален' : 
+              orderDetails.status === 'formed' ? 'Сформирован' : 
+              orderDetails.status === 'completed' ? 'Завершен' : 
+              'Отклонен'}</p>
             <p className="order-details-info-item">Дата создания: {formatTime(orderDetails.creation_date || null)}</p>
             {orderDetails.formation_date && (
               <p className="order-details-info-item">Дата формирования: {formatTime(orderDetails.formation_date)}</p>

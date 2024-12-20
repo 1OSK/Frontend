@@ -55,73 +55,54 @@ const OrderListDatacenter = () => {
                 <>
                     <h3 className="order-list-header">Список заказов:</h3>
                     {orders.length > 0 ? (
-                        <table className="order-table">
-                            <thead>
-                                <tr>
-                                    <th>№ Заказа</th>
-                                    <th>Статус</th>
-                                    <th>Дата создания</th>
-                                    <th>Дата формирования</th>
-                                    <th>Дата завершения</th>
-                                    <th>Адрес доставки</th>
-                                    <th>Время доставки</th>
-                                    <th>Сумма</th>
-                                    <th>Товары</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {orders.map((order) => (
-                                    <React.Fragment key={order.id}>
-                                        <tr>
-                                            <td
-                                                onClick={() => {
-                                                    if (order.id !== undefined) {
-                                                        handleToggle(order.id);
-                                                    }
-                                                }}
-                                                className="order-table-cell clickable"
-                                            >
-                                                Заказ #{order.id}
-                                            </td>
-                                            <td className="order-table-cell">
-                                                {order.status === 'draft' ? 'Черновик' :
-                                                order.status === 'deleted' ? 'Удален' :
-                                                order.status === 'formed' ? 'Сформирован' :
-                                                order.status === 'completed' ? 'Завершен' :
-                                                'Отклонен'}
-                                            </td>
-                                            <td className="order-table-cell">{formatTime(order.creation_date || null)}</td>
-                                            <td className="order-table-cell">
-                                                {order.formation_date ? formatTime(order.formation_date) : 'Не указана'}
-                                            </td>
-                                            <td className="order-table-cell">
-                                                {order.completion_date ? formatTime(order.completion_date) : 'Не указана'}
-                                            </td>
-                                            <td className="order-table-cell">{order.delivery_address || 'Не указан'}</td>
-                                            <td className="order-table-cell">
-                                                {order.delivery_time ? formatTime(order.delivery_time) : 'Не указана'}
-                                            </td>
-                                            <td className="order-table-cell">
-                                                {order.total_price !== undefined ? order.total_price : 'Не указана'}
-                                            </td>
-                                            <td className="order-table-cell">
-                                                <button className="toggle-button">
-                                                    <Link to={`/datacenter-orders/${order.id}`} className="link-inside-button no-blue-link">
-                                                        Подробности заказа
-                                                    </Link>
-                                                </button>
-                                            </td>
-                                        </tr>
-
-                                        {order.id !== undefined && expandedOrders[order.id] && order.datacenters?.length === 0 && (
-                                            <tr key={`no-services-${order.id}`}>
-                                                <td colSpan={9} className="service-row-cell">Нет товаров в заказе</td>
-                                            </tr>
-                                        )}
-                                    </React.Fragment>
-                                ))}
-                            </tbody>
-                        </table>
+                        <div className="order-table">
+                        {/* Заголовок таблицы */}
+                        <div className="order-header">
+                            <div>№ Заказа</div>
+                            <div>Статус</div>
+                            <div>Дата создания</div>
+                            <div>Дата формирования</div>
+                            <div>Дата завершения</div>
+                            <div>Адрес доставки</div>
+                            <div>Время доставки</div>
+                            <div>Сумма</div>
+                            <div> </div>
+                        </div>
+    
+                        {/* Строки таблицы */}
+                        {orders.map((order) => (
+                            <div className="order-row" key={order.id}>
+                                <div>Заказ #{order.id}</div>
+                                <div>
+                                    {order.status === 'draft'
+                                        ? 'Черновик'
+                                        : order.status === 'deleted'
+                                        ? 'Удален'
+                                        : order.status === 'formed'
+                                        ? 'Сформирован'
+                                        : order.status === 'completed'
+                                        ? 'Завершен'
+                                        : 'Отклонен'}
+                                </div>
+                                <div>{formatTime(order.creation_date || null)}</div>
+                                <div>{order.formation_date ? formatTime(order.formation_date) : 'Не указана'}</div>
+                                <div>{order.completion_date ? formatTime(order.completion_date) : 'Не указана'}</div>
+                                <div>{order.delivery_address || 'Не указан'}</div>
+                                <div>{order.delivery_time ? formatTime(order.delivery_time) : 'Не указана'}</div>
+                                <div>{order.total_price !== undefined ? `${order.total_price} руб.` : 'Не указана'}</div>
+                                <div>
+                                    <button className="toggle-button">
+                                        <Link to={`/datacenter-orders/${order.id}`} className="link-inside-button no-blue-link">
+                                            Подробности
+                                        </Link>
+                                    </button>
+                                </div>
+                                    {order.id !== undefined && expandedOrders[order.id] && order.datacenters?.length === 0 && (
+                                        <div className="order-card-no-items">Нет товаров в заказе</div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
                     ) : (
                         <p>Заказы отсутствуют</p>
                     )}

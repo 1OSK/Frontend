@@ -1079,6 +1079,43 @@ body {
 
 
 
+  .order-table {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+}
 
+.order-header {
+    display: flex;
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-weight: bold;
+    color: #333;
+    gap: 8px;
+    text-align: center;
+}
 
+.order-header > div {
+    flex: 1;
+}
 
+.order-row {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    gap: 8px;
+}
+
+.order-row > div {
+    flex: 1;
+    text-align: center;
+    color: #555;
+}
